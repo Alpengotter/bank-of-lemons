@@ -1,14 +1,14 @@
 # Используем официальный Node.js образ в качестве базового
 FROM node:18
 
-# Устанавливаем Yarn глобально
-RUN npm install --global yarn
-
 # Создаем директорию для приложения внутри контейнера
 WORKDIR /app
 
 # Копируем package.json и yarn.lock для установки зависимостей
 COPY package.json yarn.lock ./
+
+# Устанавливаем зависимости через Yarn
+RUN yarn install
 
 # Копируем весь исходный код в контейнер
 COPY . .
