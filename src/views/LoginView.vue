@@ -22,7 +22,7 @@
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 
-const API_URL = 'https://bankoflemons.ru/api/v1/login';
+const API_URL = 'http://bankoflemons.ru/api/v1/login';
 const REQUEST_TIMEOUT = 10000;
 
 export default {
