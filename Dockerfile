@@ -10,9 +10,6 @@ WORKDIR /app
 # Копируем package.json и yarn.lock для установки зависимостей
 COPY package.json yarn.lock ./
 
-# Устанавливаем зависимости через Yarn
-RUN yarn install
-
 # Копируем весь исходный код в контейнер
 COPY . .
 
