@@ -1,23 +1,26 @@
 # Используем официальный Node.js образ в качестве базового
 FROM node:18
 
+# Устанавливаем Yarn глобально
+RUN npm install --global yarn
+
 # Создаем директорию для приложения внутри контейнера
 WORKDIR /app
 
-# Копируем package.json и package-lock.json для установки зависимостей
-COPY package*.json ./
+# Копируем package.json и yarn.lock для установки зависимостей
+COPY package.json yarn.lock ./
 
-# Устанавливаем зависимости
-RUN npm install
+# Устанавливаем зависимости через Yarn
+RUN yarn install
 
 # Копируем весь исходный код в контейнер
 COPY . .
 
 # Собираем проект
-RUN npm run build
+RUN yarn build
 
 # Сообщаем Docker, что контейнер слушает на порту 5173
 EXPOSE 5173
 
 # Запускаем приложение
-CMD ["npm", "run", "dev", "--", "--host"]
+CMD ["yarn", "run", "dev", "--", "--host"]
