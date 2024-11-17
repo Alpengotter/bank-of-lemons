@@ -18,7 +18,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 
@@ -33,7 +33,7 @@ export default {
     const isLoading = ref(false);
     const router = useRouter();
 
-    const validateEmail = (email) => {
+    const validateEmail = (email: string) => {
       const emailRegex = /^[a-zA-Z0-9._-]+@zarplata.ru$/;
       return emailRegex.test(email);
     };
@@ -88,7 +88,7 @@ export default {
             throw new Error(`Server responded with status: ${response.status}`);
         }
 
-      } catch (error) {
+      } catch (error: any) {
         console.error('Login error:', error);
 
         if (error.name === 'AbortError') {
