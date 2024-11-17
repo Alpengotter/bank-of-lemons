@@ -69,8 +69,8 @@ export default {
         switch (response.status) {
           case 200:
             const data = await response.json();
-            if (data.token) {
-              localStorage.setItem('token', data.token);
+            if (data.accessToken) {
+              localStorage.setItem('token', data.accessToken);
               router.push({ name: 'home' });
               return;
             }
