@@ -5,14 +5,14 @@ import Menu from './components/Menu.vue';
 
 <template>
   <header class="header">
-    <img alt="Vue logo" class="header__logo" src="@/assets/logo.svg" width="125" height="125" />
+    <img alt="Vue logo" class="header__logo" src="@/assets/logo.svg" width="125" height="56" />
 
     <div class="header__menu">
       <Menu />
     </div>
 
     <div class="header__profile">
-
+      Огнев Ю.
     </div>
   </header>
 
@@ -25,6 +25,9 @@ header {
   max-height: 100vh;
   display: flex;
   justify-content: space-between;
+
+  margin-bottom: 80px;
+  margin-top: 40px;
 }
 
 .header__logo {
@@ -32,8 +35,23 @@ header {
 }
 
 .header__profile {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   width: 125px;
-  height: 125px;
+  height: 56px;
+
+  border-radius: 999px;
+  border: 1px solid var(--color-border);
+
+  background-color: var(--vt-c-white);
+
+  font-style: normal;
+  font-weight: 500;
+  font-size: 18px;
+  line-height: 22px;
+
+  color: var(--color-text);
 }
 
 nav {
