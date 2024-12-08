@@ -4,11 +4,14 @@ import Menu from './components/Menu.vue';
 </script>
 
 <template>
-  <header>
-    <img alt="Vue logo" class="logo" src="@/assets/logo.svg" width="125" height="125" />
+  <header class="header">
+    <img alt="Vue logo" class="header__logo" src="@/assets/logo.svg" width="125" height="125" />
 
-    <div class="wrapper">
+    <div class="header__menu">
       <Menu />
+    </div>
+
+    <div class="header__profile">
 
     </div>
   </header>
@@ -20,11 +23,17 @@ import Menu from './components/Menu.vue';
 header {
   line-height: 1.5;
   max-height: 100vh;
+  display: flex;
+  justify-content: space-between;
 }
 
-.logo {
+.header__logo {
   display: block;
-  margin: 0 auto 2rem;
+}
+
+.header__profile {
+  width: 125px;
+  height: 125px;
 }
 
 nav {

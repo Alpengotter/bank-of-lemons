@@ -22,8 +22,16 @@
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 
-const API_URL = 'http://bankoflemons.ru/api/v1/login';
 const REQUEST_TIMEOUT = 10000;
+
+interface LoginResponse {
+  accessToken: string;
+}
+
+interface LoginCredentials {
+  email: string;
+  password: string;
+}
 
 export default {
   setup() {
@@ -33,72 +41,84 @@ export default {
     const isLoading = ref(false);
     const router = useRouter();
 
-    const validateEmail = (email: string) => {
+    const validateEmail = (email: string): boolean => {
       const emailRegex = /^[a-zA-Z0-9._-]+@zarplata.ru$/;
       return emailRegex.test(email);
     };
 
-    const login = async () => {
-      try {
-        isLoading.value = true;
-        errorMessage.value = '';
+    const createLoginRequest = (credentials: LoginCredentials, signal: AbortSignal): RequestInit => ({
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'X-Requested-With': 'XMLHttpRequest'
+      },
+      credentials: 'include',
+      body: JSON.stringify(credentials),
+      signal
+    });
 
-        if (!validateEmail(username.value)) {
-          errorMessage.value = 'Неверный формат email';
-          return;
+    const handleLoginResponse = async (response: Response): Promise<void> => {
+      switch (response.status) {
+        case 200: {
+          const data: LoginResponse = await response.json();
+          if (!data.accessToken) {
+            throw new Error('Invalid token received');
+          }
+          localStorage.setItem('token', data.accessToken);
+          router.push({ name: 'home' });
+          break;
         }
+        case 401:
+          errorMessage.value = 'Неверное имя пользователя или пароль';
+          break;
+        case 429:
+          errorMessage.value = 'Слишком много попыток входа. Попробуйте позже';
+          break;
+        default:
+          throw new Error(`Server responded with status: ${response.status}`);
+      }
+    };
 
-        const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), REQUEST_TIMEOUT);
+    const handleLoginError = (error: Error): void => {
+      console.error('Login error:', error);
 
-        const response = await fetch(API_URL, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json',
-          },
-          body: JSON.stringify({
-            email: username.value.trim(),
-            password: password.value
-          }),
-          signal: controller.signal
-        });
+      if (error.name === 'AbortError') {
+        errorMessage.value = 'Превышено время ожидания запроса';
+      } else if (error instanceof TypeError && error.message.includes('Failed to fetch')) {
+        errorMessage.value = 'Ошибка соединения с сервером';
+      } else {
+        errorMessage.value = 'Произошла ошибка при входе';
+      }
+    };
+
+    const login = async (): Promise<void> => {
+      if (!validateEmail(username.value)) {
+        errorMessage.value = 'Неверный формат email';
+        return;
+      }
+
+      isLoading.value = true;
+      errorMessage.value = '';
+
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), REQUEST_TIMEOUT);
+
+      try {
+        const credentials: LoginCredentials = {
+          email: username.value.trim(),
+          password: password.value
+        };
+
+        const response = await fetch(
+          '/api/v1/login',
+          createLoginRequest(credentials, controller.signal)
+        );
 
         clearTimeout(timeoutId);
-
-        switch (response.status) {
-          case 200:
-            const data = await response.json();
-            if (data.accessToken) {
-              localStorage.setItem('token', data.accessToken);
-              router.push({ name: 'home' });
-              return;
-            }
-            throw new Error('Invalid token received');
-
-          case 401:
-            errorMessage.value = 'Неверное имя пользователя или пароль';
-            return;
-
-          case 429:
-            errorMessage.value = 'Слишком много попыток входа. Попробуйте позже';
-            return;
-
-          default:
-            throw new Error(`Server responded with status: ${response.status}`);
-        }
-
-      } catch (error: any) {
-        console.error('Login error:', error);
-
-        if (error.name === 'AbortError') {
-          errorMessage.value = 'Превышено время ожидания запроса';
-        } else if (error instanceof TypeError && error.message.includes('Failed to fetch')) {
-          errorMessage.value = 'Ошибка соединения с сервером';
-        } else {
-          errorMessage.value = 'Произошла ошибка при входе';
-        }
-
+        await handleLoginResponse(response);
+      } catch (error) {
+        handleLoginError(error as Error);
       } finally {
         isLoading.value = false;
       }
@@ -115,7 +135,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .login-view {
   display: flex;
   justify-content: center;
