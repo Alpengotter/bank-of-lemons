@@ -47,7 +47,7 @@ export default defineComponent({
 })
 </script>
 
-<style lang="scss" scoped>
+<style scoped>
 .input-container {
   position: relative;
   max-width: 300px;
@@ -74,17 +74,17 @@ export default defineComponent({
   line-height: 17px;
 
   color: var(--color-text);
+}
 
-  &:focus {
-    outline: none;
-    border-color: none;
-    box-shadow: none;
-  }
+.ui-input:focus {
+  outline: none;
+  border-color: none;
+  box-shadow: none;
+}
 
-  &:disabled {
-    background-color: #f5f5f5;
-    cursor: not-allowed;
-  }
+.ui-input:disabled {
+  background-color: #f5f5f5;
+  cursor: not-allowed;
 }
 
 .input-label {
@@ -102,18 +102,16 @@ export default defineComponent({
   color: #4a90e2;
 }
 
-.error {
-  .ui-input {
-    border-color: #ff4d4f;
+.error .ui-input {
+  border-color: #ff4d4f;
+}
 
-    &:focus {
-      box-shadow: 0 0 0 3px rgba(255, 77, 79, 0.1);
-    }
-  }
+.error .ui-input:focus {
+  box-shadow: 0 0 0 3px rgba(255, 77, 79, 0.1);
+}
 
-  .input-label {
-    color: #ff4d4f;
-  }
+.error .input-label {
+  color: #ff4d4f;
 }
 
 .search-icon {

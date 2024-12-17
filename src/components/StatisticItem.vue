@@ -38,44 +38,42 @@ defineProps<{
 }>()
 </script>
 
-<style lang="scss" scoped>
-.statistic {
-  &-total {
-    display: flex;
-    margin-bottom: 6px;
+<style scoped>
+.statistic-total {
+  display: flex;
+  margin-bottom: 6px;
 
-    align-items: flex-end
-  }
+  align-items: flex-end
+}
 
-  &-icon {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: #00000010;
-    border-radius: 10px;
-    width: 30px;
-    height: 30px;
+.statistic-icon {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #00000010;
+  border-radius: 10px;
+  width: 30px;
+  height: 30px;
 
-    margin-right: 4px;
-  }
+  margin-right: 4px;
+}
 
-  &-count {
-    font-style: normal;
-    font-weight: 200;
-    font-size: 60px;
-    line-height: 44px;
+.statistic-count {
+  font-style: normal;
+  font-weight: 200;
+  font-size: 60px;
+  line-height: 44px;
 
-    color: #000000;
-  }
+  color: #000000;
+}
 
-  &-title {
-    font-style: normal;
-    font-weight: 300;
-    font-size: 14px;
-    line-height: 17px;
-    /* identical to box height */
+.statistic-title {
+  font-style: normal;
+  font-weight: 300;
+  font-size: 14px;
+  line-height: 17px;
+  /* identical to box height */
 
-    color: #000000;
-  }
+  color: #000000;
 }
 </style>

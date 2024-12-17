@@ -67,7 +67,7 @@ const toggleModal = () => {
 
 </script>
 
-<style lang="scss" scoped>
+<style scoped>
 .header {
   display: flex;
   justify-content: space-between;
