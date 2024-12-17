@@ -1,20 +1,11 @@
 export interface User {
   id: string
-  fullname: string
-  department: string
+  firstName: string
+  lastName: string
+  jobTitle: string | null
   email: string
   lemons: number
   diamonds: number
-  status: UserStatus
-  role: UserRole
-}
-
-export enum UserStatus {
-  ACTIVE = 'active',
-  INACTIVE = 'inactive',
-}
-
-export enum UserRole {
-  ADMIN = 'admin',
-  USER = 'user',
+  userRole: string
+  isActive: boolean
 }

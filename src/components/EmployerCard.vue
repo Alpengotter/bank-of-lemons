@@ -1,12 +1,12 @@
 <template>
   <div class="employer">
     <div class="info">
-      <p class="primary-text">{{ user.fullname }}</p>
+      <p class="primary-text">{{ user.lastName }} {{ user.firstName }}</p>
       <p class="secondary-text">{{ user.email }}</p>
     </div>
 
     <div class="department">
-      <p class="secondary-text">{{ user.department }}</p>
+      <p class="secondary-text">{{ user.jobTitle }}</p>
     </div>
 
     <div class="wallet">
@@ -70,7 +70,7 @@ defineProps<{
 .info {
   display: flex;
   flex-direction: column;
-  width: 300px;
+  width: 250px;
 }
 
 .department {
