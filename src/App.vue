@@ -84,9 +84,6 @@ main {
 }
 
 footer {
-  position: absolute;
-  bottom: 0;
-  left: 0;
   width: 100%;
   display: flex;
   flex-direction: row;
