@@ -1,9 +1,6 @@
 # Используем официальный Node.js образ в качестве базового
 FROM node:18
 
-# Устанавливаем git, так как он необходим для клонирования репозитория
-RUN apt-get update && apt-get install -y git && rm -rf /var/lib/apt/lists/*
-
 # Создаем директорию для приложения внутри контейнера
 WORKDIR /app
 
@@ -12,6 +9,9 @@ COPY package.json yarn.lock ./
 
 # Устанавливаем зависимости через Yarn
 RUN yarn install
+
+# Копируем весь исходный код в контейнер
+COPY . .
 
 # Собираем проект
 RUN yarn build
