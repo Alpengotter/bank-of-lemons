@@ -5,3 +5,9 @@
   margin: 0 auto;
   font-weight: normal;
 }
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: radial-gradient(circle at left top, #ffffff 20%, #ffe000 150%) fixed;
+}

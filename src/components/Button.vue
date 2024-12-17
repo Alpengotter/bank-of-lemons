@@ -34,12 +34,12 @@ defineOptions({
 }
 
 .secondary {
-  background-color: var(--vt-c-white);
+  background-color: #ffffff90;
   color: var(--color--secondary-text);
   border: none;
   font-size: 14px;
-  font-weight: 600;
-  padding: 8px 0;
+  font-weight: 500;
+  padding: 8px 12px;
   border-radius: 16px;
 
   display: flex;

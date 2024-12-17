@@ -18,9 +18,9 @@ import { ref, onMounted, onUnmounted } from 'vue'
 <style scoped>
 .menu {
   display: flex;
-  background-color: var(--vt-c-white);
+  background-color: var(---color-background-transparent);
   border-radius: 999px;
-  padding: 8px;
+  padding: 6px;
 }
 
 nav {
@@ -29,7 +29,6 @@ nav {
 
 .nav-item {
   padding: 8px 16px;
-  background-color: var(--vt-c-white);
   color: var(--color-text);
   border-radius: 999px;
   text-decoration: none;

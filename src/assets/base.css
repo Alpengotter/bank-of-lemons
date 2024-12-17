@@ -30,6 +30,7 @@
   --color-text: var(--vt-c-black);
   --color-secondary-text: #939393;
   --color-link-text: var(--vt-c-blue);
+  ---color-background-transparent: #ffffff90;
 }
 
 *,

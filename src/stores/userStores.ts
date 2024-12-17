@@ -53,13 +53,21 @@ export const useUserStore = defineStore('users', {
       this.loading = true
       this.error = null
       try {
-        // const response = await fetch('/api/users')
-        // const data = await response.json()
+        const accessToken = localStorage.getItem('token') // or from your auth store
 
-        setTimeout(() => {
-          this.users = MOCK_USERS
-          console.log('Данные успешно загружены:', this.users)
-        }, 1500)
+        if (!accessToken) {
+          throw new Error('No access token available')
+        }
+
+        const response = await fetch('/api/v1/employers', {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${accessToken}`,
+          },
+        })
+        const data = await response.json()
+        this.users = data
       } catch (error) {
         this.error = error instanceof Error ? error.message : 'Failed to fetch users'
       } finally {

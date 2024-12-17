@@ -50,6 +50,7 @@ export default defineComponent({
 <style lang="scss" scoped>
 .input-container {
   position: relative;
+  max-width: 300px;
   width: 100%;
   min-width: 300px;
 }
@@ -63,9 +64,9 @@ export default defineComponent({
 .ui-input {
   width: 100%;
   padding: 12px 16px;
-  border: none;
-  border-radius: 16px;
-  background-color: var(--vt-c-white);
+  border: 1px solid var(--vt-c-black);
+  border-radius: 999px;
+  background-color: transparent;
 
   font-style: normal;
   font-weight: 400;
@@ -118,7 +119,7 @@ export default defineComponent({
 .search-icon {
   position: absolute;
   right: 16px;
-  color: var(--vt-c-text-light-1);
+  color: var(--vt-c-black);
   display: flex;
   align-items: center;
   pointer-events: none;
