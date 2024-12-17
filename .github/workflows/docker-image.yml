@@ -1,18 +1,35 @@
-name: Docker Image CI
+# .github/workflows/deploy-to-uat.yml
+name: Deploy to UAT
 
 on:
   push:
-    branches: [ "uat" ]
-  pull_request:
-    branches: [ "uat" ]
+    branches:
+      - uat
 
 jobs:
-
-  build:
-
+  deploy:
+    name: Deploy Updates to UAT
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v4
-    - name: Build the Docker image
-      run: docker-compose up --build -d
+      # 1. Checkout репозиторий
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      # 2. Установить sshpass
+      - name: Install sshpass
+        run: sudo apt-get update && sudo apt-get install -y sshpass
+
+      # 3. Установить SSH соединение с логином и паролем
+      - name: Deploy on Server
+        env:
+          SSH_USER: ${{ secrets.SSH_USER }}
+          SSH_PASSWORD: ${{ secrets.SSH_PASSWORD }}
+          SERVER_IP: ${{ secrets.SERVER_IP }}
+        run: |
+          sshpass -p "$SSH_PASSWORD" ssh -o StrictHostKeyChecking=no $SSH_USER@$SERVER_IP << EOF
+            cd /path/to/your/project
+            git pull origin uat
+            docker compose down
+            docker compose up -d --build
+          EOF
