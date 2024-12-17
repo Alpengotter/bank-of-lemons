@@ -28,8 +28,7 @@ jobs:
           SERVER_IP: ${{ secrets.SERVER_IP }}
         run: |
           sshpass -p "$SSH_PASSWORD" ssh -o StrictHostKeyChecking=no $SSH_USER@$SERVER_IP << EOF
-            cd /path/to/your/project
+            cd bank-of-lemons/
             git pull origin uat
-            docker compose down
-            docker compose up -d --build
+            docker-compose up --build -d
           EOF
