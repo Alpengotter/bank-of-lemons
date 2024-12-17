@@ -59,3 +59,6 @@ yarn test:e2e
 ```sh
 yarn lint
 ```
+
+### Tech Stack
+Vue3 + Typescript + Pinia
