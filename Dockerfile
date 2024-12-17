@@ -8,7 +8,7 @@ RUN apt-get update && apt-get install -y git && rm -rf /var/lib/apt/lists/*
 WORKDIR /app
 
 # Клонируем нужный репозиторий (замените <URL_репозитория> на ваш)
-RUN git clone git@github.com:BjornSodenberg/bank-of-lemons.git .
+RUN git clone https://github.com/BjornSodenberg/bank-of-lemons.git .
 
 # Копируем package.json и yarn.lock для установки зависимостей
 COPY package.json yarn.lock ./
