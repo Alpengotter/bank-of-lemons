@@ -1,5 +1,5 @@
 <template>
-  <div class="menu">
+  <div class="menu glass">
     <nav>
       <RouterLink to="/" class="nav-item" active-class="active">Заказы</RouterLink>
       <RouterLink to="/employers" class="nav-item" active-class="active">Сотрудники</RouterLink>
@@ -18,7 +18,7 @@ import { ref, onMounted, onUnmounted } from 'vue'
 <style scoped>
 .menu {
   display: flex;
-  background-color: var(---color-background-transparent);
+  /* background-color: var(---color-background-transparent); */
   border-radius: 999px;
   padding: 6px;
 }

@@ -12,7 +12,7 @@
     </div>
     <div class="actions-wrapper">
       <!-- search field -->
-      <Search placeholder="Поиск по сотрудникам" />
+      <Search placeholder="Поиск по сотрудникам" v-model:model-value="searchQuery" />
       <div class="actions">
         <!-- action buttons -->
         <Button appearance="secondary">Выбрать</Button>
@@ -22,8 +22,8 @@
         </div>
       </div>
     </div>
-    <div class="employers-list" v-if="userStore.users.length">
-      <EmployerCard v-for="user in userStore.users" :key="user.id" :user="user" @click="toggleModal" />
+    <div class="employers-list" v-if="filteredEmployees.length">
+      <EmployerCard v-for="employee in filteredEmployees" :key="employee.id" :user="employee" @click="toggleModal" />
     </div>
     <div class="empty" v-else>
       <span>
@@ -32,7 +32,7 @@
       <span>Обратитесь в поддержку.</span>
     </div>
 
-    <ModalView v-if="isModalOpen" @close-modal="toggleModal">
+    <ModalView :show="isModalOpen" @close-modal="toggleModal">
       <template #content>
         <h2>Пример модального окна</h2>
         <p>Это пример модального окна, где контент передается через слот.</p>
@@ -43,7 +43,7 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from 'vue';
+import { onMounted, ref, computed } from 'vue';
 import EmployerCard from '../components/EmployerCard.vue';
 import { useUserStore } from '@/stores/userStores';
 import Button from '@/components/Button.vue';
@@ -51,20 +51,36 @@ import Search from '@/components/Search.vue';
 import ModalView from '@/components/ModalView.vue';
 import StatisticItem from '@/components/StatisticItem.vue';
 
-const userStore = useUserStore()
-
-onMounted(async () => {
-  await userStore.fetchUsers()
-});
-
-// Состояние модального окна
+// Store initialization
+const userStore = useUserStore();
+const searchQuery = ref("");
 const isModalOpen = ref(false);
 
-// Метод для переключения состояния модального окна
+// Fetch users on component mount
+onMounted(async () => {
+  await userStore.fetchUsers();
+});
+
+// Modal toggle function
 const toggleModal = () => {
   isModalOpen.value = !isModalOpen.value;
 };
 
+// Computed property for filtering employees
+const filteredEmployees = computed(() => {
+  const query = searchQuery.value.toLowerCase().trim();
+
+  if (!query) return userStore.users;
+
+  return userStore.users.filter((employee) => {
+    return (
+      employee.firstName?.toLowerCase().includes(query) ||
+      employee.lastName?.toLowerCase().includes(query) ||
+      employee.email?.toLowerCase().includes(query) ||
+      employee.jobTitle?.toLowerCase().includes(query)
+    );
+  });
+});
 </script>
 
 <style scoped>
