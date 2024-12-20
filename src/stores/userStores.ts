@@ -35,7 +35,7 @@ export const useUserStore = defineStore('users', {
           throw new Error('No access token available')
         }
 
-        const response = await axios.get('/api/v1/employers?offset=0&limit=25', {
+        const response = await axios.get('/api/v1/employers?offset=0&limit=200', {
           headers: {
             'Content-Type': 'application/json',
             Authorization: `Bearer ${accessToken}`,

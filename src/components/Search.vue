@@ -16,36 +16,28 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue'
+<script setup lang="ts">
+interface Props {
+  modelValue?: string | number
+  label?: string
+  placeholder?: string
+  type?: string
+  disabled?: boolean
+}
 
-export default defineComponent({
-  name: 'CustomInput',
-  props: {
-    modelValue: {
-      type: [String, Number],
-      default: ''
-    },
-    label: {
-      type: String,
-      default: ''
-    },
-    placeholder: {
-      type: String,
-      default: ''
-    },
-    type: {
-      type: String,
-      default: 'text'
-    },
-    disabled: {
-      type: Boolean,
-      default: false
-    }
-  },
-  emits: ['update:modelValue']
+withDefaults(defineProps<Props>(), {
+  modelValue: '',
+  label: '',
+  placeholder: '',
+  type: 'text',
+  disabled: false
 })
+
+defineEmits<{
+  (e: 'update:modelValue', value: string | number): void
+}>()
 </script>
+
 
 <style scoped>
 .input-container {
