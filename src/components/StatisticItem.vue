@@ -33,7 +33,7 @@
 
 defineProps<{
   title: string,
-  count: string,
+  count: number,
   icon: 'employer' | 'diamonds' | 'lemons'
 }>()
 </script>

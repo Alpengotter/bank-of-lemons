@@ -5,14 +5,14 @@
         <h1 class="title">Сотрудники</h1>
       </div>
       <div class="statistic-container">
-        <StatisticItem title="Сотрудников" count="150" icon="employer" />
-        <StatisticItem title="Алмазов" count="27" icon="diamonds" />
-        <StatisticItem title="Лимонов" count="216350" icon="lemons" />
+        <StatisticItem title="Сотрудников" :count="userStore.employerStatistic?.users || 0" icon="employer" />
+        <StatisticItem title="Алмазов" :count="userStore.employerStatistic?.diamonds || 0" icon="diamonds" />
+        <StatisticItem title="Лимонов" :count="userStore.employerStatistic?.lemons || 0" icon="lemons" />
       </div>
     </div>
     <div class="actions-wrapper">
       <!-- search field -->
-      <Search placeholder="Поиск по сотрудникам" v-model:model-value="searchQuery" />
+      <Search placeholder="Поиск" v-model:model-value="searchQuery" />
       <div class="actions">
         <!-- action buttons -->
         <Button appearance="secondary">Выбрать</Button>
@@ -23,7 +23,11 @@
       </div>
     </div>
     <div class="employers-list" v-if="filteredEmployees.length">
-      <EmployerCard v-for="employee in filteredEmployees" :key="employee.id" :user="employee" @click="toggleModal" />
+      <EmployerCard v-for="employee in filteredEmployees" :key="employee.id" :user="employee"
+        @click="selectEmployer(employee)" />
+    </div>
+    <div class="loading-spinner" v-else-if="userStore.loading">
+      Загрузка
     </div>
     <div class="empty" v-else>
       <span>
@@ -32,10 +36,9 @@
       <span>Обратитесь в поддержку.</span>
     </div>
 
-    <ModalView :show="isModalOpen" @close-modal="toggleModal">
+    <ModalView :show="isModalOpen" @close-modal="toggleModal" :user="selectedEmployer">
       <template #content>
-        <h2>Пример модального окна</h2>
-        <p>Это пример модального окна, где контент передается через слот.</p>
+        <EmployerModalContent :employer="selectedEmployer" />
       </template>
     </ModalView>
 
@@ -50,23 +53,28 @@ import Button from '@/components/Button.vue';
 import Search from '@/components/Search.vue';
 import ModalView from '@/components/ModalView.vue';
 import StatisticItem from '@/components/StatisticItem.vue';
+import EmployerModalContent from '@/components/EmployerModalContent.vue';
+import type { User } from '@/types/user';
 
-// Store initialization
 const userStore = useUserStore();
 const searchQuery = ref("");
 const isModalOpen = ref(false);
+let selectedEmployer = ref<User | undefined>(undefined);;
 
-// Fetch users on component mount
 onMounted(async () => {
   await userStore.fetchUsers();
+  await userStore.employersStat();
 });
 
-// Modal toggle function
+const selectEmployer = (user: User): void => {
+  selectedEmployer.value = user;
+  toggleModal();
+}
+
 const toggleModal = () => {
   isModalOpen.value = !isModalOpen.value;
 };
 
-// Computed property for filtering employees
 const filteredEmployees = computed(() => {
   const query = searchQuery.value.toLowerCase().trim();
 

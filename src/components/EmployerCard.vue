@@ -50,9 +50,10 @@ defineProps<{
   justify-content: space-between;
   align-items: center;
   padding: 16px 30px;
-  /* background-color: var(---color-background-transparent); */
   border-radius: 24px;
   margin-bottom: 10px;
+
+  cursor: pointer;
 }
 
 .info {
