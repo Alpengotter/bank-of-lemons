@@ -1,6 +1,11 @@
 <script setup lang="ts">
 import { RouterLink, RouterView } from 'vue-router'
 import Menu from './components/Menu.vue';
+import { computed } from 'vue';
+
+const isAuth = computed(() => {
+  return localStorage.getItem('token');
+});
 </script>
 
 <template>
@@ -9,7 +14,7 @@ import Menu from './components/Menu.vue';
     <header class="header">
       <img alt="Vue logo" class="header__logo" src="@/assets/logo.png" width="153" height="50" />
 
-      <div class="header__menu">
+      <div class="header__menu" v-if="isAuth">
         <Menu />
         <div class="header__profile glass">
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">

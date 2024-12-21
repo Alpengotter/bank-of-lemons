@@ -6,7 +6,7 @@
 
 <script setup lang="ts">
 interface UiButton {
-  appearance?: 'primary' | 'secondary' | 'link';
+  appearance?: 'primary' | 'secondary' | 'link' | 'attention';
 }
 
 const props = withDefaults(defineProps<UiButton>(), {
@@ -33,7 +33,8 @@ defineOptions({
   border-radius: 16px;
 }
 
-.secondary {
+.secondary,
+.attention {
   background-color: #ffffff90;
   color: var(--color--secondary-text);
   border: none;
@@ -54,5 +55,10 @@ defineOptions({
   font-weight: 400;
   padding: 8px 0;
   border-radius: 16px;
+}
+
+.attention {
+  background-color: #FF746C;
+  color: #fff;
 }
 </style>

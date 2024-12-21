@@ -1,24 +1,29 @@
 <template>
-  <Transition name="fade">
+  <Transition name="slide">
     <div v-if="show" class="modal-backdrop" @click.self="emitClose" role="dialog" aria-modal="true">
-      <Transition name="slide">
-        <div class="modal-content glass">
-          <button @click="emitClose" class="close-btn" aria-label="Close modal">
-            Закрыть
-          </button>
+      <div class="modal-content glass">
+        <button @click="emitClose" class="close-btn" aria-label="Close modal">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M18 6L6 18M6 6L18 18" stroke="black" stroke-width="2" stroke-linecap="round"
+              stroke-linejoin="round" />
+          </svg>
 
-          <div class="modal-body">
-            <slot name="content"></slot>
-          </div>
+        </button>
+
+        <div class="modal-body">
+          <slot name="content"></slot>
         </div>
-      </Transition>
+      </div>
     </div>
   </Transition>
 </template>
 
 <script setup lang="ts">
+import type { User } from '@/types/user';
+
 interface Props {
   show: boolean;
+  user: User | undefined;
 }
 
 defineProps<Props>();
@@ -40,7 +45,7 @@ const emitClose = () => {
   right: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.3);
+  /* background-color: rgba(0, 0, 0, 0.3); */
   z-index: 1000;
   display: flex;
   justify-content: flex-end;
@@ -50,7 +55,7 @@ const emitClose = () => {
 .modal-content {
   width: 584px;
   height: 100%;
-  background-color: white;
+  /* background-color: white; */
   box-shadow: -2px 0px 5px rgba(0, 0, 0, 0.2);
   padding: 20px;
   position: relative;
@@ -60,8 +65,8 @@ const emitClose = () => {
 /* Кнопка закрытия */
 .close-btn {
   position: absolute;
-  top: 10px;
-  right: 10px;
+  top: 20px;
+  left: 20px;
   background: none;
   border: none;
   font-size: 20px;
@@ -69,30 +74,15 @@ const emitClose = () => {
 }
 
 .modal-body {
-  margin-top: 40px;
   overflow-y: auto;
 }
 
-/* Background fade animation */
-.fade-enter-active,
-.fade-leave-active {
-  transition: opacity 0.3s ease;
-}
-
-.fade-enter-from,
-.fade-leave-to {
-  opacity: 0;
-}
-
-/* Modal slide animation with delay */
 .slide-enter-active {
-  transition: transform 0.3s ease 0.2s;
-  /* Added 0.2s delay for entering */
+  transition: transform 0.5s ease-out;
 }
 
 .slide-leave-active {
-  transition: transform 0.3s ease;
-  /* No delay when leaving */
+  transition: transform 0.5s ease-in;
 }
 
 .slide-enter-from,

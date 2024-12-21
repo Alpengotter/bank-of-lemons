@@ -1,12 +1,12 @@
 <template>
   <div class="login-view">
-    <div class="login-form">
+    <div class="login-form glass">
       <p class="title">Авторизация</p>
 
       <form @submit.prevent="login" class="login">
         <div class="input-container">
-          <input class="input" type="text" v-model="username" required placeholder="email" />
-          <input class="input" type="password" v-model="password" required placeholder="password" />
+          <input class="input" type="text" v-model="username" required placeholder="почта" />
+          <input class="input" type="password" v-model="password" required placeholder="пароль" />
           <span class="input-error">{{ errorMessage }}</span>
         </div>
         <button class="submit" :class="{ disabled: isLoading }" type="submit">
@@ -151,7 +151,6 @@ export default {
 
 .login-form {
   width: 295px;
-  background-color: var(--vt-c-white);
 
   display: flex;
   flex-direction: column;
@@ -173,12 +172,13 @@ export default {
 }
 
 .input {
-  background-color: var(--vt-c-gray);
+  background-color: #ffffff60;
   color: var(--color-text);
   border: none;
   font-size: 14px;
   padding: 8px 16px;
   border-radius: 16px;
+  /* border: 1px solid black; */
 }
 
 .input-error {
