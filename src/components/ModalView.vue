@@ -19,11 +19,9 @@
 </template>
 
 <script setup lang="ts">
-import type { User } from '@/types/user';
 
 interface Props {
   show: boolean;
-  user: User | undefined;
 }
 
 defineProps<Props>();

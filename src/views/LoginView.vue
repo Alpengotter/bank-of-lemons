@@ -178,7 +178,6 @@ export default {
   font-size: 14px;
   padding: 8px 16px;
   border-radius: 16px;
-  /* border: 1px solid black; */
 }
 
 .input-error {

@@ -37,20 +37,9 @@ export const useUserStore = defineStore('users', {
       this.loading = true
       this.error = null
       try {
-        const accessToken = localStorage.getItem('token') // or from your auth store
+        const response = await makeRequest<User[]>(`employers?offset=0&limit=200`, 'get')
 
-        if (!accessToken) {
-          throw new Error('No access token available')
-        }
-
-        const response = await axios.get('/api/v1/employers?offset=0&limit=200', {
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${accessToken}`,
-          },
-        })
-
-        this.users = response.data
+        this.users = response
       } catch (error) {
         this.error = error instanceof Error ? error.message : 'Failed to fetch users'
       } finally {
@@ -63,25 +52,120 @@ export const useUserStore = defineStore('users', {
       this.error = null
 
       try {
-        const accessToken = localStorage.getItem('token')
+        const response = await makeRequest<EmployerStatistic>(`employers/get-all-stat`, 'get')
 
-        if (!accessToken) {
-          throw new Error('No access token available')
-        }
+        this.employerStatistic = response
+      } catch (error) {
+        this.error = error instanceof Error ? error.message : 'Failed to fetch stat'
+      } finally {
+        this.loading = false
+      }
+    },
 
-        const response = await axios.get('/api/v1/employers/get-all-stat', {
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${accessToken}`,
-          },
+    async updateWallet(id: number | string, wallet: { lemons: number; diamonds: number }) {
+      this.loading = true
+      this.error = null
+
+      try {
+        const response = await makeRequest<User>(`employers/currency/${id}`, 'put', {
+          lemons: wallet.lemons,
+          diamonds: wallet.diamonds,
         })
 
-        this.employerStatistic = response.data
+        if (response && response.id) {
+          const userId = response.id
+          const index = this.users.findIndex((user) => user.id === userId)
+          if (index !== -1) {
+            this.users[index] = { ...this.users[index], ...response }
+          }
+        }
+
+        return response
       } catch (error) {
-        this.error = error instanceof Error ? error.message : 'Failed to fetch users'
+        this.error = error instanceof Error ? error.message : 'Failed to update wallet'
+      } finally {
+        this.loading = false
+      }
+    },
+
+    async getEmployerById(id: number) {
+      this.loading = true
+      this.error = null
+
+      try {
+        const response = await makeRequest<User>(`employers/${id}`, 'get')
+
+        return response
+      } catch (error) {
+        this.error = error instanceof Error ? error.message : 'Failed to get user '
+      } finally {
+        this.loading = false
+      }
+    },
+
+    async deactivateEmployerById(id: number) {
+      this.loading = true
+      this.error = null
+
+      try {
+        const response = await makeRequest<User>(`employers/status/${id}`, 'put', {
+          isActive: false,
+        })
+
+        return response
+      } catch (error) {
+        this.error = error instanceof Error ? error.message : 'Failed to deactivate employer '
+      } finally {
+        this.loading = false
+      }
+    },
+
+    async addEmployer(user: User) {
+      this.loading = true
+      this.error = null
+
+      try {
+        const response = await makeRequest<User>(`employers/employers`, 'post', user)
+
+        return response
+      } catch (error) {
+        this.error = error instanceof Error ? error.message : 'Failed to create employer '
       } finally {
         this.loading = false
       }
     },
   },
 })
+
+const makeRequest = async <T>(
+  endpoint: string,
+  method: 'get' | 'post' | 'put',
+  data?: unknown,
+): Promise<T> => {
+  const accessToken = localStorage.getItem('token')
+
+  if (!accessToken) {
+    throw new Error('No access token available')
+  }
+
+  const headers = {
+    'Content-Type': 'application/json',
+    Authorization: `Bearer ${accessToken}`,
+  }
+
+  try {
+    const response = await axios({
+      url: `/api/v1/${endpoint}`,
+      method,
+      headers,
+      ...(method !== 'get' && { data }),
+    })
+
+    return response.data
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      throw new Error(error.response?.data?.message || 'Request failed')
+    }
+    throw error
+  }
+}

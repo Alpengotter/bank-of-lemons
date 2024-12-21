@@ -1,34 +1,44 @@
 <template>
-  <div class="wrapper">
+  <div v-if="userStore.loading">
+    Загрузка
+  </div>
+  <div class="wrapper" v-if="employer && !userStore.loading">
     <header>
       <h2 class="fullname">{{ employer?.lastName }} {{ employer?.firstName }}</h2>
       <span class="email">{{ employer?.email }}</span>
     </header>
     <main>
       <div class="wallet">
-        <p>🍋 <span>{{ employer?.lemons }}</span></p>
-        <p>💎 <span>{{ employer?.diamonds }}</span></p>
+        <p>🍋 <span>{{ employer?.lemons }}</span>
+          <span v-if="activeCurrencyIndex === 0 && inputValue.length" class="change-value"
+            :class="{ 'add': activeOperationIndex === 0, 'remove': activeOperationIndex === 1 }">
+            <span v-if="activeOperationIndex === 0">+</span>
+            <span v-else>-</span>{{ inputValue }}
+          </span>
+        </p>
+        <p>💎 <span>{{ employer?.diamonds }}</span>
+          <span v-if="activeCurrencyIndex === 1 && inputValue.length" class="change-value"
+            :class="{ 'add': activeOperationIndex === 0, 'remove': activeOperationIndex === 1 }">
+            <span v-if="activeOperationIndex === 0">+</span>
+            <span v-else>-</span>{{ inputValue }}
+          </span>
+        </p>
       </div>
       <div class="actions">
         <div class="switch">
-          <TransitionGroup name="slide">
-            <div v-for="(operation, index) in operations" :key="index"
-              :class="{ 'switch-item': true, active: activeOperationIndex === index }"
-              @click="setActiveOperation(index)">
-              <span>{{ operation }}</span>
-            </div>
-          </TransitionGroup>
+          <div v-for="(currency, index) in currencies" :key="index"
+            :class="{ 'switch-item': true, active: activeCurrencyIndex === index }" @click="setActiveCurrency(index)">
+            <span>{{ currency }}</span>
+          </div>
         </div>
         <div class="switch">
-          <TransitionGroup name="slide">
-            <div v-for="(currency, index) in currencies" :key="index"
-              :class="{ 'switch-item': true, active: activeCurrencyIndex === index }" @click="setActiveCurrency(index)">
-              <span>{{ currency }}</span>
-            </div>
-          </TransitionGroup>
+          <div v-for="(operation, index) in operations" :key="index"
+            :class="{ 'switch-item': true, active: activeOperationIndex === index }" @click="setActiveOperation(index)">
+            <span>{{ operation }}</span>
+          </div>
         </div>
-        <input class="input" type="text" placeholder="0">
-        <Button appearance="primary" class="submit">
+        <input class="input" type="text" placeholder="0" v-model="inputValue">
+        <Button appearance="primary" class="submit" @click="handleSubmit(employer)">
           OK
         </Button>
       </div>
@@ -44,40 +54,100 @@
     </main>
     <footer>
       <Button appearance="attention" class="deactivate">
-        <svg width="25" height="24" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path
-            d="M6.5 19C6.5 19.5304 6.71071 20.0391 7.08579 20.4142C7.46086 20.7893 7.96957 21 8.5 21H16.5C17.0304 21 17.5391 20.7893 17.9142 20.4142C18.2893 20.0391 18.5 19.5304 18.5 19V7H6.5V19ZM8.5 9H16.5V19H8.5V9ZM16 4L15 3H10L9 4H5.5V6H19.5V4H16Z"
+            d="M8 1C4.1 1 1 4.1 1 8C1 11.9 4.1 15 8 15C11.9 15 15 11.9 15 8C15 4.1 11.9 1 8 1ZM8 14C4.7 14 2 11.3 2 8C2 4.7 4.7 2 8 2C11.3 2 14 4.7 14 8C14 11.3 11.3 14 8 14Z"
+            fill="white" />
+          <path
+            d="M10.7 11.5L8 8.8L5.3 11.5L4.5 10.7L7.2 8L4.5 5.3L5.3 4.5L8 7.2L10.7 4.5L11.5 5.3L8.8 8L11.5 10.7L10.7 11.5Z"
             fill="white" />
         </svg>
-        Деактивировать</Button>
+
+        <span class="button-title">Деактивировать</span></Button>
     </footer>
   </div>
 </template>
 
 <script setup lang="ts">
 import Button from '@/components/Button.vue';
+import { useUserStore } from '@/stores/userStores';
 import type { User } from '@/types/user';
-import { ref } from 'vue';
+import { onMounted, ref } from 'vue';
+
+const userStore = useUserStore();
 
 const operations = ['+', '-'];
 const currencies = ['🍋', '💎'];
-// Текущее состояние для отслеживания активного индекса
-const activeOperationIndex = ref(0); // Изначально не выбран ни один элемент
-const activeCurrencyIndex = ref(0); // Изначально не выбран ни один элемент
 
+const activeOperationIndex = ref(0);
+const activeCurrencyIndex = ref(0);
+const inputValue = ref('');
+const employer = ref<User | undefined>(undefined);
 
-// Меняет активный элемент
+onMounted(async () => {
+  try {
+    const response = await userStore.getEmployerById(props.employerId);
+    employer.value = response;
+  } catch (error) {
+    console.error('Error fetching employer:', error);
+  }
+});
+
+const refresh = async () => {
+  try {
+    const response = await userStore.getEmployerById(props.employerId);
+    employer.value = response;
+  } catch (error) {
+    console.error('Error fetching employer:', error);
+  }
+}
+
+const handleSubmit = async (employer: User | undefined) => {
+  if (!employer) return;
+  let lemons = employer.lemons || 0;
+  let diamonds = employer.diamonds || 0;
+
+  if (inputValue.value.length) {
+    if (activeCurrencyIndex.value === 0) {
+      if (activeOperationIndex.value === 0) {
+        lemons += parseInt(inputValue.value);
+      } else {
+        lemons -= parseInt(inputValue.value);
+      }
+    } else {
+      if (activeOperationIndex.value === 0) {
+        diamonds += parseInt(inputValue.value);
+      } else {
+        diamonds -= parseInt(inputValue.value);
+      }
+    }
+  }
+
+  try {
+    await props.updateWallet(employer.id, { lemons, diamonds });
+    await refresh();
+
+    inputValue.value = '';
+  } catch (error) {
+    console.error('Error updating wallet:', error);
+  }
+};
+
 const setActiveOperation = (index: number) => {
-  activeOperationIndex.value = activeOperationIndex.value === index ? 0 : index; // Если активный повторно, убираем активность
+  activeOperationIndex.value = activeOperationIndex.value === index ? 0 : index;
 };
 
 const setActiveCurrency = (index: number) => {
-  activeCurrencyIndex.value = activeCurrencyIndex.value === index ? 0 : index; // Если активный повторно, убираем активность
+  activeCurrencyIndex.value = activeCurrencyIndex.value === index ? 0 : index;
 };
 
 
-defineProps<{
-  employer: User | undefined,
+const props = defineProps<{
+  employerId: number,
+  updateWallet: (id: number, wallet: {
+    lemons: number;
+    diamonds: number;
+  }) => Promise<User | undefined>;
 }>()
 </script>
 
@@ -180,7 +250,7 @@ footer {
 
 .switch {
   display: flex;
-  background-color: rgba(255, 255, 255, .5);
+  background-color: rgba(0, 0, 0, 0.1);
   border-radius: 99px;
 }
 
@@ -192,7 +262,7 @@ footer {
   height: 32px;
   border-radius: 99px;
   margin: 4px;
-
+  cursor: pointer;
 }
 
 .switch-item span {
@@ -200,27 +270,13 @@ footer {
 }
 
 .switch-item.active {
-  background-color: var(--vt-c-primary);
-}
-
-/* Анимации для слайдов */
-.slide-enter-active,
-.slide-leave-active {
-  transition: transform 0.5s;
-}
-
-.slide-enter-from {
-  transform: translateX(100%);
-}
-
-.slide-leave-to {
-  transform: translateX(-100%);
+  background-color: var(--vt-c-white);
 }
 
 .input {
   border-radius: 99px;
   border: none;
-  background-color: rgba(255, 255, 255, .5);
+  background-color: rgba(0, 0, 0, .1);
   padding: 8px 16px;
   font-size: 14px;
 }
@@ -231,5 +287,21 @@ footer {
   border-radius: 99px;
   padding: 0;
   font-size: 14px;
+}
+
+.change-value {
+  font-size: 24px;
+}
+
+.add {
+  color: green;
+}
+
+.remove {
+  color: #FF746C;
+}
+
+.button-title {
+  margin-left: 6px;
 }
 </style>

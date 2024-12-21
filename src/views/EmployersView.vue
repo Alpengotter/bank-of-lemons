@@ -17,11 +17,11 @@
         <!-- action buttons -->
         <Button appearance="secondary">Выбрать</Button>
         <Button appearance="secondary">Выбрать все</Button>
-        <div>
-          <Button appearance="secondary" @click="toggleModal">+</Button>
-        </div>
+        <Button appearance="secondary" @click="toggleAddNewModal">+</Button>
       </div>
     </div>
+
+    <!-- employers list -->
     <div class="employers-list" v-if="filteredEmployees.length">
       <EmployerCard v-for="employee in filteredEmployees" :key="employee.id" :user="employee"
         @click="selectEmployer(employee)" />
@@ -36,9 +36,17 @@
       <span>Обратитесь в поддержку.</span>
     </div>
 
+    <!-- employer info -->
     <ModalView :show="isModalOpen" @close-modal="toggleModal" :user="selectedEmployer">
       <template #content>
-        <EmployerModalContent :employer="selectedEmployer" />
+        <EmployerModalContent :employerId="selectedEmployer!.id" :updateWallet="userStore.updateWallet" />
+      </template>
+    </ModalView>
+
+    <!-- employer info -->
+    <ModalView :show="isModalAddNewOpen" @close-modal="toggleAddNewModal">
+      <template #content>
+        <NewEmployerContent />
       </template>
     </ModalView>
 
@@ -54,12 +62,15 @@ import Search from '@/components/Search.vue';
 import ModalView from '@/components/ModalView.vue';
 import StatisticItem from '@/components/StatisticItem.vue';
 import EmployerModalContent from '@/components/EmployerModalContent.vue';
+import NewEmployerContent from '@/components/NewEmployerContent.vue';
+
 import type { User } from '@/types/user';
 
 const userStore = useUserStore();
 const searchQuery = ref("");
 const isModalOpen = ref(false);
-let selectedEmployer = ref<User | undefined>(undefined);;
+const isModalAddNewOpen = ref(false);
+let selectedEmployer = ref<User | undefined>(undefined);
 
 onMounted(async () => {
   await userStore.fetchUsers();
@@ -74,6 +85,10 @@ const selectEmployer = (user: User): void => {
 const toggleModal = () => {
   isModalOpen.value = !isModalOpen.value;
 };
+
+const toggleAddNewModal = () => {
+  isModalAddNewOpen.value = !isModalAddNewOpen.value;
+}
 
 const filteredEmployees = computed(() => {
   const query = searchQuery.value.toLowerCase().trim();
