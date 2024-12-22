@@ -12,31 +12,31 @@ const router = createRouter({
       path: '/',
       name: 'home',
       component: HomeView,
-      meta: { requiresAuth: true },
+      meta: { requiresAuth: true, roles: ['ADMIN'] },
     },
     {
       path: '/login',
       name: 'login',
       component: LoginView,
-      meta: { requiresAuth: false },
+      meta: { requiresAuth: false, roles: ['ADMIN'] },
     },
     {
       path: '/employers',
       name: 'employers',
       component: EmployersView,
-      meta: { requiresAuth: true },
+      meta: { requiresAuth: true, roles: ['ADMIN'] },
     },
     {
       path: '/statistics',
       name: 'statistics',
       component: StatisticsView,
-      meta: { requiresAuth: true },
+      meta: { requiresAuth: true, roles: ['MASTER'] },
     },
     {
       path: '/reports',
       name: 'reports',
       component: ReportsView,
-      meta: { requiresAuth: true },
+      meta: { requiresAuth: true, roles: ['MASTER'] },
     },
   ],
 })
@@ -46,15 +46,23 @@ function isAuthenticated() {
 }
 
 router.beforeEach((to, from, next) => {
+  const userRoles = ['ADMIN']
+
   if (to.matched.some((record) => record.meta.requiresAuth)) {
     if (!isAuthenticated()) {
-      next({ name: 'login' })
-    } else {
-      next()
+      return next({ name: 'login' })
     }
-  } else {
-    next()
+
+    if (to.meta.roles) {
+      // Если для страницы заданы роли, проверяем доступ
+      const hasRole = (to.meta.roles as Array<string>).some((role) => userRoles.includes(role))
+      if (!hasRole) {
+        return next({ name: 'home' })
+      }
+    }
   }
+
+  next()
 })
 
 export default router

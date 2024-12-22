@@ -5,18 +5,21 @@
         <h1 class="title">Сотрудники</h1>
       </div>
       <div class="statistic-container">
-        <StatisticItem title="Сотрудников" :count="userStore.employerStatistic?.users || 0" icon="employer" />
-        <StatisticItem title="Алмазов" :count="userStore.employerStatistic?.diamonds || 0" icon="diamonds" />
-        <StatisticItem title="Лимонов" :count="userStore.employerStatistic?.lemons || 0" icon="lemons" />
+        <StatisticItem title="Сотрудников" :count="userStore.employerStatistic?.users" icon="employer" />
+        <StatisticItem title="Алмазов" :count="userStore.employerStatistic?.diamonds" icon="diamonds" />
+        <StatisticItem title="Лимонов" :count="userStore.employerStatistic?.lemons" icon="lemons" />
       </div>
     </div>
     <div class="actions-wrapper">
       <!-- search field -->
       <Search placeholder="Поиск" v-model:model-value="searchQuery" />
       <div class="actions">
-        <!-- action buttons -->
-        <Button appearance="secondary">Выбрать</Button>
+        <!-- запускает выбор сотрудников -->
+        <Button appearance="secondary" @click="toggleSelectMode" v-if="!isSelectMode">Выбрать</Button>
+        <Button appearance="secondary" @click="toggleSelectMode" v-else>Отмена</Button>
+
         <Button appearance="secondary">Выбрать все</Button>
+
         <Button appearance="secondary" @click="toggleAddNewModal">+</Button>
       </div>
     </div>
@@ -24,10 +27,10 @@
     <!-- employers list -->
     <div class="employers-list" v-if="filteredEmployees.length">
       <EmployerCard v-for="employee in filteredEmployees" :key="employee.id" :user="employee"
-        @click="selectEmployer(employee)" />
+        :show-user-info="selectEmployer" :selectMode="isSelectMode" />
     </div>
     <div class="loading-spinner" v-else-if="userStore.loading">
-      Загрузка
+      <Preloader :width="50" />
     </div>
     <div class="empty" v-else>
       <span>
@@ -63,6 +66,7 @@ import ModalView from '@/components/ModalView.vue';
 import StatisticItem from '@/components/StatisticItem.vue';
 import EmployerModalContent from '@/components/EmployerModalContent.vue';
 import NewEmployerContent from '@/components/NewEmployerContent.vue';
+import Preloader from '@/components/Preloader.vue';
 
 import type { User } from '@/types/user';
 
@@ -70,6 +74,7 @@ const userStore = useUserStore();
 const searchQuery = ref("");
 const isModalOpen = ref(false);
 const isModalAddNewOpen = ref(false);
+const isSelectMode = ref(false);
 let selectedEmployer = ref<User | undefined>(undefined);
 
 onMounted(async () => {
@@ -104,6 +109,11 @@ const filteredEmployees = computed(() => {
     );
   });
 });
+
+const toggleSelectMode = () => {
+  isSelectMode.value = !isSelectMode.value;
+}
+
 </script>
 
 <style scoped>
@@ -168,5 +178,12 @@ const filteredEmployees = computed(() => {
   font-size: 24px;
   font-weight: 300;
   text-align: center;
+}
+
+.loading-spinner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 40px;
 }
 </style>

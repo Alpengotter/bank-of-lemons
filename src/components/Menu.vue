@@ -3,8 +3,8 @@
     <nav>
       <RouterLink to="/" class="nav-item" active-class="active">Заказы</RouterLink>
       <RouterLink to="/employers" class="nav-item" active-class="active">Сотрудники</RouterLink>
-      <RouterLink to="/statistics" class="nav-item" active-class="active">Статистика</RouterLink>
-      <RouterLink to="/reports" class="nav-item" active-class="active">Отчеты</RouterLink>
+      <RouterLink to="/statistics" class="nav-item" active-class="active" v-if="false">Статистика</RouterLink>
+      <RouterLink to="/reports" class="nav-item" active-class="active" v-if="false">Отчеты</RouterLink>
     </nav>
   </div>
 </template>

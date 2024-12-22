@@ -4,41 +4,143 @@
       <h2 class="fullname">Новый сотрудник</h2>
     </header>
     <main>
-      <input type="text" class="input" placeholder="Фамилия">
-      <input type="text" class="input" placeholder="Имя">
-      <input type="text" class="input" placeholder="Почта">
-      <input type="text" class="input" placeholder="Должность">
-      <select class="input">
-        <option value="USER">Пользователь</option>
-        <option value="ADMIN">Администратор</option>
-      </select>
+      <input v-model.trim="surname" type="text" class="input" placeholder="Фамилия">
+      <p class="error-message">{{ errors.surname }}</p>
+      <input v-model.trim="firstName" type="text" class="input" placeholder="Имя">
+      <p class="error-message">{{ errors.firstName }}</p>
+      <input v-model.trim="email" type="email" class="input" placeholder="Почта">
+      <p class="error-message">{{ errors.email }}</p>
+      <input v-model.trim="department" type="text" class="input" placeholder="Должность">
+      <p class="error-message">{{ errors.department }}</p>
     </main>
     <footer>
       <Button appearance="primary" class="create-button">
-        <span class="button-title">Создать</span></Button>
+        <span class="button-title" @click="handleSubmit">Создать</span></Button>
     </footer>
   </div>
 </template>
 
 <script setup lang="ts">
-// TODO: добавить предупреждение о закрытии модалки
-// TODO: добавить валидацию полей
-
 import Button from '@/components/Button.vue';
 import { useUserStore } from '@/stores/userStores';
 import type { User } from '@/types/user';
-import { onMounted, ref } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 
 const userStore = useUserStore();
 
-const handleSubmit = async (employer: User | undefined) => {
+const surname = ref('');
+const firstName = ref('');
+const email = ref('');
+const department = ref('');
 
+const errors = ref({
+  surname: '',
+  firstName: '',
+  email: '',
+  department: ''
+});
+
+const validateEmail = (email: string): boolean => {
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return emailRegex.test(email);
 };
 
+const validateField = (field: string) => {
+  // FIXME: поправить типизацию
+  // @ts-ignore
+  errors.value[field] = '';
 
-const props = defineProps<{
+  switch (field) {
+    case 'surname':
+      if (!surname.value) {
+        errors.value.surname = 'Фамилия обязательна';
+      } else if (surname.value.length < 2) {
+        errors.value.surname = 'Минимум 2 символа';
+      }
+      break;
 
-}>()
+    case 'firstName':
+      if (!firstName.value) {
+        errors.value.firstName = 'Имя обязательно';
+      } else if (firstName.value.length < 2) {
+        errors.value.firstName = 'Минимум 2 символа';
+      }
+      break;
+
+    case 'email':
+      if (!email.value) {
+        errors.value.email = 'Email обязателен';
+      } else if (!validateEmail(email.value)) {
+        errors.value.email = 'Неверный формат email';
+      }
+      break;
+
+    case 'department':
+      if (department.value.length < 2) {
+        errors.value.department = 'Минимум 2 символа';
+      }
+      break;
+  }
+};
+
+const validateForm = () => {
+  validateField('surname');
+  validateField('firstName');
+  validateField('email');
+  validateField('department');
+};
+
+const isFormValid = computed(() => {
+  return (
+    surname.value &&
+    firstName.value &&
+    email.value &&
+    department.value &&
+    !errors.value.surname &&
+    !errors.value.firstName &&
+    !errors.value.email &&
+    !errors.value.department
+  );
+});
+
+const handleSubmit = async () => {
+  validateForm();
+
+  if (!isFormValid.value) {
+    return;
+  }
+
+  const newUser: Omit<User, "id"> = {
+    firstName: firstName.value,
+    lastName: surname.value,
+    email: email.value,
+    lemons: 0,
+    diamonds: 0,
+    userRole: "USER",
+    isActive: true,
+    jobTitle: department.value
+  }
+
+  try {
+    await userStore.addEmployer(newUser);
+    surname.value = '';
+    firstName.value = '';
+    email.value = '';
+    department.value = '';
+
+    emitClose();
+  } catch (error) {
+    console.error('Failed to create user:', error);
+  }
+};
+
+const emit = defineEmits<{
+  (e: 'close-modal'): void
+}>();
+
+const emitClose = () => {
+  emit('close-modal');
+};
 </script>
 
 <style scoped>
@@ -53,7 +155,7 @@ main {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 16px;
+  gap: 8px;
   flex: 1;
   padding: 45px 0;
 }
@@ -189,11 +291,8 @@ footer {
   font-size: 24px;
 }
 
-.add {
-  color: green;
-}
-
-.remove {
-  color: #FF746C;
+.error-message {
+  color: #fd4137;
+  font-size: small;
 }
 </style>
