@@ -128,19 +128,16 @@ const handleSubmit = async () => {
     email.value = '';
     department.value = '';
 
-    emitClose();
+    props.close();
+
   } catch (error) {
     console.error('Failed to create user:', error);
   }
 };
 
-const emit = defineEmits<{
-  (e: 'close-modal'): void
-}>();
-
-const emitClose = () => {
-  emit('close-modal');
-};
+const props = defineProps<{
+  close: () => void;
+}>()
 </script>
 
 <style scoped>

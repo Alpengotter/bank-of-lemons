@@ -42,14 +42,15 @@
     <!-- employer info -->
     <ModalView :show="isModalOpen" @close-modal="toggleModal" :user="selectedEmployer">
       <template #content>
-        <EmployerModalContent :employerId="selectedEmployer!.id" :updateWallet="userStore.updateWallet" />
+        <EmployerModalContent :employerId="selectedEmployer!.id" :updateWallet="userStore.updateWallet"
+          :close="toggleModal" />
       </template>
     </ModalView>
 
     <!-- employer info -->
     <ModalView :show="isModalAddNewOpen" @close-modal="toggleAddNewModal">
       <template #content>
-        <NewEmployerContent />
+        <NewEmployerContent :close="toggleAddNewModal" />
       </template>
     </ModalView>
 
