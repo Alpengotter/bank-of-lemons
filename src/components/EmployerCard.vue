@@ -1,15 +1,18 @@
 <template>
   <div class="employer glass">
-    <div class="info">
-      <p class="primary-text">{{ user.lastName }} {{ user.firstName }}</p>
-      <p class="secondary-text">{{ user.email }}</p>
+    <div class="info-container">
+      <input type="checkbox" v-if="selectMode">
+      <div class="info">
+        <p class="primary-text">{{ user.lastName }} {{ user.firstName }}</p>
+        <p class="secondary-text">{{ user.email }}</p>
+      </div>
     </div>
 
     <div class="department">
       <p class="secondary-text">{{ user.jobTitle }}</p>
     </div>
 
-    <div class="wallet">
+    <div class="wallet" @click="showUserInfo(user)">
       <div class="wallet-lemons">
         <p class="wallet-text">{{ user.lemons }} 🍋</p>
 
@@ -29,7 +32,9 @@ import type { User } from '@/types/user';
 
 
 defineProps<{
-  user: User
+  user: User;
+  selectMode: Boolean;
+  showUserInfo: (user: User) => void;
 }>()
 </script>
 
@@ -52,8 +57,11 @@ defineProps<{
   padding: 16px 30px;
   border-radius: 24px;
   margin-bottom: 10px;
+}
 
-  cursor: pointer;
+.info-container {
+  display: flex;
+  gap: 18px;
 }
 
 .info {
@@ -69,6 +77,16 @@ defineProps<{
 .wallet {
   display: flex;
   flex-direction: row;
+  padding: 6px 12px;
+  transition: .2s;
+  cursor: pointer;
+}
+
+.wallet:hover {
+  background-color: #ffffff80;
+  padding: 6px 12px;
+  border-radius: 99px;
+  transition: .2s;
 }
 
 .wallet-lemons,

@@ -80,6 +80,9 @@ export const useUserStore = defineStore('users', {
           }
         }
 
+        await this.fetchUsers()
+        await this.employersStat()
+
         return response
       } catch (error) {
         this.error = error instanceof Error ? error.message : 'Failed to update wallet'
@@ -112,6 +115,9 @@ export const useUserStore = defineStore('users', {
           isActive: false,
         })
 
+        await this.fetchUsers()
+        await this.employersStat()
+
         return response
       } catch (error) {
         this.error = error instanceof Error ? error.message : 'Failed to deactivate employer '
@@ -120,12 +126,15 @@ export const useUserStore = defineStore('users', {
       }
     },
 
-    async addEmployer(user: User) {
+    async addEmployer(user: Omit<User, 'id' | 'isActive'>) {
       this.loading = true
       this.error = null
 
       try {
-        const response = await makeRequest<User>(`employers/employers`, 'post', user)
+        const response = await makeRequest<User>(`employers`, 'post', user)
+
+        await this.fetchUsers()
+        await this.employersStat()
 
         return response
       } catch (error) {

@@ -1,6 +1,6 @@
 <template>
-  <div v-if="userStore.loading">
-    Загрузка
+  <div v-if="userStore.loading" class="preloader">
+    <Preloader :width="50" />
   </div>
   <div class="wrapper" v-if="employer && !userStore.loading">
     <header>
@@ -63,7 +63,7 @@
             fill="white" />
         </svg>
 
-        <span class="button-title">Деактивировать</span></Button>
+        <span class="button-title" @click="deactivate">Деактивировать</span></Button>
     </footer>
   </div>
 </template>
@@ -73,6 +73,7 @@ import Button from '@/components/Button.vue';
 import { useUserStore } from '@/stores/userStores';
 import type { User } from '@/types/user';
 import { onMounted, ref } from 'vue';
+import Preloader from './Preloader.vue';
 
 const userStore = useUserStore();
 
@@ -140,6 +141,14 @@ const setActiveOperation = (index: number) => {
 const setActiveCurrency = (index: number) => {
   activeCurrencyIndex.value = activeCurrencyIndex.value === index ? 0 : index;
 };
+
+const deactivate = async () => {
+  try {
+    await userStore.deactivateEmployerById(props.employerId)
+  } catch (error) {
+    console.error('Error deactivating employer:', error);
+  }
+}
 
 
 const props = defineProps<{
@@ -303,5 +312,11 @@ footer {
 
 .button-title {
   margin-left: 6px;
+}
+
+.preloader {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 </style>
