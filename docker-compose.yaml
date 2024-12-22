@@ -13,3 +13,7 @@ services:
     environment:
       - VITE_HOST=0.0.0.0
     command: npm run dev -- --host
+
+networks:
+  shared_network:
+    external: true
