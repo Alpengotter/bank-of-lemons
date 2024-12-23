@@ -7,6 +7,8 @@ import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import vueJsx from '@vitejs/plugin-vue-jsx'
 import vueDevTools from 'vite-plugin-vue-devtools'
+import fs from 'fs'
+import path from 'path'
 
 // https://vite.dev/config/
 export default defineConfig(({ command, mode }) => {
@@ -14,16 +16,21 @@ export default defineConfig(({ command, mode }) => {
 
   return {
     server: {
+      https: {
+        key: fs.readFileSync(path.resolve(__dirname, './certs/certificate.key')),
+        cert: fs.readFileSync(path.resolve(__dirname, './certs/certificate.crt')),
+        ca: fs.readFileSync(path.resolve(__dirname, './certs/certificate_ca.crt')),
+      },
       host: 'localhost.bankoflemons.ru',
       port: 5173,
       ...(isDevelopment && {
         proxy: {
           '/api/v1': {
-            target: 'http://bankoflemons.ru',
+            target: 'https://bankoflemons.ru',
             changeOrigin: true,
             secure: false,
             headers: {
-              Origin: 'http://bankoflemons.ru',
+              Origin: 'https://bankoflemons.ru',
             },
             credentials: 'include',
           },
