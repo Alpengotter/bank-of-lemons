@@ -16,9 +16,9 @@ export default defineConfig(({ command, mode }) => {
   return {
     server: {
       https: {
-        key: fs.readFileSync(path.resolve(__dirname, './certs/certificate.key')),
-        cert: fs.readFileSync(path.resolve(__dirname, './certs/certificate.crt')),
-        ca: fs.readFileSync(path.resolve(__dirname, './certs/certificate_ca.crt')),
+        key: process.env.CERTIFICATE_KEY,
+        cert: process.env.CERTIFICATE_CRT,
+        ca: process.env.CERTIFICATE_CA_CRT,
       },
       host: 'localhost.bankoflemons.ru',
       port: 5173,
