@@ -11,6 +11,11 @@ services:
     networks:
       - my_network
 
+  bank-of-lemons-web:
+    image: bank-of-lemons-web:latest
+    networks:
+      - my_network
+
 networks:
   my_network:
     external: true
