@@ -5,6 +5,8 @@ on:
     branches:
       - uat # Эта job сработает, когда будут изменения в ветке uat.
 
+  workflow_dispatch: # Позволяет запускать процесс вручную.
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -43,6 +45,7 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     needs: build # Эта job зависит от завершения job build.
+    if: github.event_name == 'workflow_dispatch' # Деплой выполняется только при ручном запуске.
 
     steps:
       # 1. Скачиваем артефакт Docker-образа.
@@ -59,12 +62,12 @@ jobs:
           username: root
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           source: bank-of-lemons-web.tar
-          target: /path/to/target/directory
+          target: /root/bank-of-lemons-web.tar
 
       # 3. Загружаем Docker-образ на сервере.
       - name: Load Docker image on server
         run: |
-          ssh -i ${{ secrets.SSH_PRIVATE_KEY }} root@bankoflemons.ru "docker load -i ~/bank-of-lemons-web.tar"
+          ssh -i ${{ secrets.SSH_PRIVATE_KEY }} root@bankoflemons.ru "docker load -i /root/bank-of-lemons-web.tar"
 
       # 4. Запускаем контейнер на сервере.
       - name: Run Docker container on server
