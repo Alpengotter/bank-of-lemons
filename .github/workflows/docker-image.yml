@@ -24,23 +24,18 @@ jobs:
           yarn install
           yarn build
 
-      # 3. Создаём файлы сертификатов из секретов.
-      - name: Create SSL certificate files
-        run: |
-          mkdir -p ssl
-          echo "${{ secrets.CERTIFICATE_CRT }}" > ssl/certificate.crt
-          echo "${{ secrets.CERTIFICATE_KEY }}" > ssl/certificate.key
-          echo "${{ secrets.CERTIFICATE_CA_CRT }}" > ssl/certificate_ca.crt
-
-      # 4. Создаём и сохраняем Docker-образ.
+      # 3. Создаём и сохраняем Docker-образ.
       - name: Build Docker image
         id: build_docker_image
         run: |
-          docker build -t bank-of-lemons-web:latest .
+          docker build --build-arg CERTIFICATE_CRT="${{ secrets.CERTIFICATE_CRT }}" \
+                       --build-arg CERTIFICATE_KEY="${{ secrets.CERTIFICATE_KEY }}" \
+                       --build-arg CERTIFICATE_CA_CRT="${{ secrets.CERTIFICATE_CA_CRT }}" \
+                       -t bank-of-lemons-web:latest .
           docker save bank-of-lemons-web:latest > bank-of-lemons-web.tar
           echo "::set-output name=image::bank-of-lemons-web.tar"  # Используете set-output для передачи данных
 
-      # 5. Загружаем артефакт Docker-образа.
+      # 4. Загружаем артефакт Docker-образа.
       - name: Upload Docker image artifact
         uses: actions/upload-artifact@v3
         with:
