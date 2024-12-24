@@ -15,11 +15,6 @@ export default defineConfig(({ command, mode }) => {
 
   return {
     server: {
-      https: {
-        key: process.env.CERTIFICATE_KEY,
-        cert: process.env.CERTIFICATE_CRT,
-        ca: process.env.CERTIFICATE_CA_CRT,
-      },
       host: 'localhost.bankoflemons.ru',
       port: 5173,
       ...(isDevelopment && {
