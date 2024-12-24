@@ -16,7 +16,7 @@ jobs:
     steps:
       # 1. Скачиваем код репозитория.
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       # 2. Устанавливаем зависимости и собираем проект.
       - name: Install dependencies and build project
@@ -24,7 +24,15 @@ jobs:
           yarn install
           yarn build
 
-      # 3. Создаём и сохраняем Docker-образ.
+      # 3. Создаём файлы сертификатов из секретов.
+      - name: Create SSL certificate files
+        run: |
+          mkdir -p ssl
+          echo "${{ secrets.SSL_CERTIFICATE }}" > ssl/certificate.crt
+          echo "${{ secrets.SSL_CERTIFICATE_KEY }}" > ssl/certificate.key
+          echo "${{ secrets.SSL_CERTIFICATE_CA }}" > ssl/certificate_ca.crt
+
+      # 4. Создаём и сохраняем Docker-образ.
       - name: Build Docker image
         id: build_docker_image
         run: |
@@ -32,7 +40,7 @@ jobs:
           docker save bank-of-lemons-web:latest > bank-of-lemons-web.tar
           echo "::set-output name=image::bank-of-lemons-web.tar"  # Используете set-output для передачи данных
 
-      # 4. Загружаем артефакт Docker-образа.
+      # 5. Загружаем артефакт Docker-образа.
       - name: Upload Docker image artifact
         uses: actions/upload-artifact@v3
         with:
@@ -58,19 +66,15 @@ jobs:
           host: bankoflemons.ru
           username: root
           key: ${{ secrets.SSH_PRIVATE_KEY }}
-          source: ./bank-of-lemons-web.tar
-          target: /tmp/bank-of-lemons-web.tar
+          source: bank-of-lemons-web.tar
+          target: /path/to/target/directory
 
-      # 3. Деплой Docker-образа на сервере.
-      - name: Deploy Docker image via SSH
-        uses: appleboy/ssh-action@v0.1.12
-        with:
-          host: bankoflemons.ru
-          username: root
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
-          script: |
-            docker stop bank-of-lemons-web || true  # Останавливаем уже запущенный контейнер (если есть).
-            docker rm bank-of-lemons-web || true    # Удаляем предыдущий контейнер.
-            docker rmi bank-of-lemons-web:latest || true  # Удаляем старый образ.
-            docker load < /tmp/bank-of-lemons-web.tar  # Загружаем новый образ.
-            docker run -d -p 5173:5173 --name bank-of-lemons-web bank-of-lemons-web:latest  # Запускаем контейнер с новым образом.
+      # 3. Загружаем Docker-образ на сервере.
+      - name: Load Docker image on server
+        run: |
+          ssh -i ${{ secrets.SSH_PRIVATE_KEY }} root@bankoflemons.ru "docker load -i /path/to/target/directory/bank-of-lemons-web.tar"
+
+      # 4. Запускаем контейнер на сервере.
+      - name: Run Docker container on server
+        run: |
+          ssh -i ${{ secrets.SSH_PRIVATE_KEY }} root@bankoflemons.ru "docker run -d -p 80:80 -p 443:443 --name bank-of-lemons-web bank-of-lemons-web:latest"

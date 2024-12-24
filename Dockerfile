@@ -1,5 +1,5 @@
 # Используем официальный Node.js образ
-FROM node:18
+FROM node:18 AS build
 
 # Устанавливаем рабочую директорию
 WORKDIR /app
@@ -8,7 +8,7 @@ WORKDIR /app
 COPY package.json yarn.lock ./
 
 # Устанавливаем зависимости
-RUN yarn install
+RUN yarn install --frozen-lockfile && yarn cache clean
 
 # Копируем весь проект
 COPY . .
@@ -16,8 +16,22 @@ COPY . .
 # Собираем проект
 RUN yarn build
 
-# Сообщаем Docker, что мы будем слушать на порту 80
-EXPOSE 5173
+# Используем легкий образ для продакшн
+FROM nginx:alpine
 
-# Запускаем сервер для раздачи статических файлов
-CMD ["yarn", "run", "dev", "--", "--host"]
+# Копируем собранные файлы в директорию, где nginx будет их раздавать
+COPY --from=build /app/dist /usr/share/nginx/html
+
+# Копируем конфигурационный файл nginx
+COPY nginx.conf /etc/nginx/nginx.conf
+
+# Копируем SSL сертификаты
+COPY certs/certificate.crt /etc/nginx/ssl/certificate.crt
+COPY certs/certificate.key /etc/nginx/ssl/certificate.key
+COPY certs/certificate_ca.crt /etc/nginx/ssl/certificate_ca.crt
+
+# Открываем порт 80 и 443 для доступа
+EXPOSE 80 443
+
+# Запускаем nginx
+CMD ["nginx", "-g", "daemon off;"]
