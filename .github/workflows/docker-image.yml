@@ -64,7 +64,7 @@ jobs:
       # 3. Загружаем Docker-образ на сервере.
       - name: Load Docker image on server
         run: |
-          ssh -i ${{ secrets.SSH_PRIVATE_KEY }} root@bankoflemons.ru "docker load -i /root/bank-of-lemons-web.tar"
+          ssh ${{ secrets.SSH_PRIVATE_KEY }} root@bankoflemons.ru "docker load /root/bank-of-lemons-web.tar"
 
       # 4. Запускаем контейнер на сервере.
       - name: Run Docker container on server
