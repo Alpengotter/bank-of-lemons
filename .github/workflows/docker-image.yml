@@ -28,9 +28,9 @@ jobs:
       - name: Create SSL certificate files
         run: |
           mkdir -p ssl
-          echo "${{ secrets.SSL_CERTIFICATE }}" > ssl/certificate.crt
-          echo "${{ secrets.SSL_CERTIFICATE_KEY }}" > ssl/certificate.key
-          echo "${{ secrets.SSL_CERTIFICATE_CA }}" > ssl/certificate_ca.crt
+          echo "${{ secrets.CERTIFICATE_CRT }}" > ssl/certificate.crt
+          echo "${{ secrets.CERTIFICATE_KEY }}" > ssl/certificate.key
+          echo "${{ secrets.CERTIFICATE_CA_CRT }}" > ssl/certificate_ca.crt
 
       # 4. Создаём и сохраняем Docker-образ.
       - name: Build Docker image
