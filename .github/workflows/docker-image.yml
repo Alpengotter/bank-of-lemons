@@ -50,6 +50,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: docker-image
+          path: .
 
       # 2. Setup ssh-agent and add key.
       - name: Setup SSH
@@ -75,7 +76,7 @@ jobs:
           username: root
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           source: bank-of-lemons-web.tar
-          target: /root/bank-of-lemons-web.tar
+          target: /root/
 
       # 6. Verify the file on server.
       - name: Verify Docker image file on server
@@ -86,6 +87,11 @@ jobs:
       - name: Load Docker image on server
         run: |
           ssh root@bankoflemons.ru "docker load -i /root/bank-of-lemons-web.tar"
+
+      - name: Stop and remove existing container
+        run: |
+          ssh root@bankoflemons.ru "docker stop bank-of-lemons-web || true"
+          ssh root@bankoflemons.ru "docker rm bank-of-lemons-web || true"
 
       # 8. Run Docker container on server.
       - name: Run Docker container on server
