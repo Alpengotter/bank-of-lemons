@@ -45,24 +45,29 @@ jobs:
     needs: build
 
     steps:
-      # 1. Скачиваем артефакт Docker-образа.
+      # 1. Download Docker image artifact.
       - name: Download Docker image artifact
         uses: actions/download-artifact@v4
         with:
           name: docker-image
 
-      # 2. Устанавливаем ssh-agent и добавляем ключ.
+      # 2. Setup ssh-agent and add key.
       - name: Setup SSH
         uses: webfactory/ssh-agent@v0.5.3
         with:
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
 
-      # 3. Добавляем сервер в known_hosts.
+      # 3. Add server to known_hosts.
       - name: Add server to known_hosts
         run: |
           ssh-keyscan -H bankoflemons.ru >> ~/.ssh/known_hosts
 
-      # 4. Передача Docker-образа на сервер.
+      # 4. Clean up old files from the server.
+      - name: Clean up old files on server
+        run: |
+          ssh root@bankoflemons.ru "rm -f /root/bank-of-lemons-web.tar"
+
+      # 5. Transfer Docker image to server.
       - name: Transfer Docker image to server
         uses: appleboy/scp-action@master
         with:
@@ -72,12 +77,17 @@ jobs:
           source: bank-of-lemons-web.tar
           target: /root/bank-of-lemons-web.tar
 
-      # 5. Загружаем Docker-образ на сервере.
+      # 6. Verify the file on server.
+      - name: Verify Docker image file on server
+        run: |
+          ssh root@bankoflemons.ru "ls -lh /root/bank-of-lemons-web.tar"
+
+      # 7. Load Docker image on server.
       - name: Load Docker image on server
         run: |
           ssh root@bankoflemons.ru "docker load -i /root/bank-of-lemons-web.tar"
 
-      # 6. Запускаем контейнер на сервере.
+      # 8. Run Docker container on server.
       - name: Run Docker container on server
         run: |
           ssh root@bankoflemons.ru "docker run -d -p 80:80 -p 443:443 --name bank-of-lemons-web bank-of-lemons-web:latest"
