@@ -51,12 +51,11 @@ jobs:
         with:
           name: docker-image
 
-      # 2. Создаем файл SSH ключа.
-      - name: Create SSH key file
-        run: |
-          mkdir -p /home/runner/.ssh
-          echo "${{ secrets.SSH_PRIVATE_KEY }}" > /home/runner/.ssh/id_rsa
-          chmod 600 /home/runner/.ssh/id_rsa
+      # 2. Устанавливаем ssh-agent и добавляем ключ.
+      - name: Setup SSH
+        uses: webfactory/ssh-agent@v0.5.3
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
 
       # 3. Передача Docker-образа на сервер.
       - name: Transfer Docker image to server
@@ -64,7 +63,7 @@ jobs:
         with:
           host: bankoflemons.ru
           username: root
-          key: /home/runner/.ssh/id_rsa
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
           source: bank-of-lemons-web.tar
           target: /root/bank-of-lemons-web.tar
 
