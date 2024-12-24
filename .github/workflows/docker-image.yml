@@ -54,8 +54,8 @@ jobs:
       # 2. Создаем файл SSH ключа.
       - name: Create SSH key file
         run: |
-          echo "${{ secrets.SSH_PRIVATE_KEY }}" > /home/runner/.ssh/id_rsa
-          chmod 600 /home/runner/.ssh/id_rsa
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > /root/.ssh/id_rsa
+          chmod 600 /root/.ssh/id_rsa
 
       # 3. Передача Docker-образа на сервер.
       - name: Transfer Docker image to server
@@ -63,16 +63,16 @@ jobs:
         with:
           host: bankoflemons.ru
           username: root
-          key: /home/runner/.ssh/id_rsa
+          key: /root/.ssh/id_rsa
           source: bank-of-lemons-web.tar
           target: /root/bank-of-lemons-web.tar
 
       # 4. Загружаем Docker-образ на сервере.
       - name: Load Docker image on server
         run: |
-          ssh -i /home/runner/.ssh/id_rsa root@bankoflemons.ru "docker load -i /root/bank-of-lemons-web.tar"
+          ssh -i /root/.ssh/id_rsa root@bankoflemons.ru "docker load -i /root/bank-of-lemons-web.tar"
 
       # 5. Запускаем контейнер на сервере.
       - name: Run Docker container on server
         run: |
-          ssh -i /home/runner/.ssh/id_rsa root@bankoflemons.ru "docker run -d -p 80:80 -p 443:443 --name bank-of-lemons-web bank-of-lemons-web:latest"
+          ssh -i /root/.ssh/id_rsa root@bankoflemons.ru "docker run -d -p 80:80 -p 443:443 --name bank-of-lemons-web bank-of-lemons-web:latest"
