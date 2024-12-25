@@ -18,11 +18,11 @@ WORKDIR /etc/nginx/ssl
 
 ARG CERTIFICATE_CRT
 ARG CERTIFICATE_KEY
-RUN printf "%s" "$CERTIFICATE_CRT" > /etc/nginx/ssl/certificate.crt
-RUN printf "%s" "$CERTIFICATE_KEY" > /etc/nginx/ssl/certificate.key
-RUN printf "%s" "$CERTIFICATE_CRT" > /etc/nginx/ssl/certificate.crt
-RUN printf "%s" "$CERTIFICATE_KEY" > /etc/nginx/ssl/certificate.key
-RUN printf "%s" "$CERTIFICATE_CA_CRT" > /etc/nginx/ssl/certificate_ca.crt
+ARG CERTIFICATE_CA_CRT
+
+RUN echo "$CERTIFICATE_CRT" > /etc/nginx/ssl/certificate.crt
+RUN echo "$CERTIFICATE_KEY" > /etc/nginx/ssl/certificate.key
+RUN echo "$CERTIFICATE_CA_CRT" > /etc/nginx/ssl/certificate_ca.crt
 
 COPY --from=build /app/dist /usr/share/nginx/html
 
