@@ -96,4 +96,4 @@ jobs:
       # 8. Run Docker container on server.
       - name: Run Docker container on server
         run: |
-          ssh root@bankoflemons.ru "docker run -d -p 80:80 -p 443:443 --name bank-of-lemons-web bank-of-lemons-web:latest"
+          ssh root@bankoflemons.ru "docker run -d -p 80:80 -p 443:443 --name bank-of-lemons-web --network my_network bank-of-lemons-web:latest"
