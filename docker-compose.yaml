@@ -11,16 +11,6 @@ services:
     networks:
       - my_network
 
-  lemon_bank-lemon_bank_app:
-    image: lemon_bank-lemon_bank_app:latest
-    networks:
-      - my_network
-
-  webhook-tilda-webhook:
-    image: webhook-tilda-webhook:latest
-    networks:
-      - my_network
-
 networks:
   my_network:
     driver: bridge
