@@ -11,6 +11,20 @@ services:
     networks:
       - my_network
 
+  lemon_bank-lemon_bank_app-1:
+    image: lemon_bank-lemon_bank_app-1
+    expose:
+      - '8080'
+    networks:
+      - my_network
+
+  webhook-tilda-webhook-1:
+    image: webhook-tilda-webhook-1
+    expose:
+      - '3000'
+    networks:
+      - my_network
+
 networks:
   my_network:
     driver: bridge
