@@ -3,7 +3,7 @@ name: Build and Deploy to Server
 on:
   push:
     branches:
-      - uat # Эта job сработает, когда будут изменения в ветке uat.
+      - uat
 
 jobs:
   build:
