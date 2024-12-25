@@ -1,7 +1,7 @@
 version: '3'
 
 services:
-  bank-of-lemons-web:
+  web:
     build:
       context: .
       dockerfile: Dockerfile
@@ -11,17 +11,13 @@ services:
     networks:
       - my_network
 
-  lemon-bank-backend:
-    image: lemon-bank-backend
-    expose:
-      - '8080'
+  lemon_bank-lemon_bank_app:
+    image: lemon_bank-lemon_bank_app:latest
     networks:
       - my_network
 
-  webhook-tilda-webhook-1:
-    image: webhook-tilda-webhook-1
-    expose:
-      - '3000'
+  webhook-tilda-webhook:
+    image: webhook-tilda-webhook:latest
     networks:
       - my_network
 
