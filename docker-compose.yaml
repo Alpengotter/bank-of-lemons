@@ -11,8 +11,8 @@ services:
     networks:
       - my_network
 
-  lemon_bank-lemon_bank_app-1:
-    image: lemon_bank-lemon_bank_app-1
+  lemon-bank-backend:
+    image: lemon-bank-backend
     expose:
       - '8080'
     networks:
