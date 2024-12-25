@@ -1,18 +1,13 @@
 version: '3'
 
 services:
-  web:
+  bank-of-lemons-web:
     build:
       context: .
       dockerfile: Dockerfile
     ports:
       - '80:80'
       - '443:443'
-    networks:
-      - my_network
-
-  bank-of-lemons-web:
-    image: bank-of-lemons-web:latest
     networks:
       - my_network
 
