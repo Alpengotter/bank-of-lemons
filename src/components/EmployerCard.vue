@@ -1,7 +1,10 @@
 <template>
   <div class="employer glass">
     <div class="info-container">
-      <input type="checkbox" v-if="selectMode">
+      <label class="container" v-if="selectMode">
+        <input type="checkbox" />
+        <span class="checkmark"></span>
+      </label>
       <div class="info">
         <p class="primary-text">{{ user.lastName }} {{ user.firstName }}</p>
         <p class="secondary-text">{{ user.email }}</p>
@@ -30,12 +33,11 @@
 <script setup lang="ts">
 import type { User } from '@/types/user';
 
-
-defineProps<{
+const props = defineProps<{
   user: User;
-  selectMode: Boolean;
+  selectMode: boolean;
   showUserInfo: (user: User) => void;
-}>()
+}>();
 </script>
 
 <style scoped>
@@ -61,6 +63,7 @@ defineProps<{
 
 .info-container {
   display: flex;
+  align-items: center;
   gap: 18px;
 }
 
@@ -108,7 +111,75 @@ defineProps<{
 .divider {
   width: 1px;
   background-color: var(--vt-c-divider-light-1);
-  margin-right: 10px;
-  margin-left: 10px;
+  margin: 0 10px;
+}
+
+/* custom input */
+
+/* The container */
+.container {
+  display: flex;
+  position: relative;
+  padding-left: 25px;
+  cursor: pointer;
+  font-size: 22px;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  width: 25px;
+  height: 25px;
+}
+
+/* Hide the browser's default checkbox */
+.container input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+  height: 0;
+  width: 0;
+}
+
+/* Create a custom checkbox */
+.checkmark {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 25px;
+  width: 25px;
+  background-color: #fff;
+  border-radius: 99px;
+  transition: .2s;
+}
+
+/* On mouse-over, add a grey background color */
+.container:hover input~.checkmark {
+  background-color: #d4d4d4;
+  transition: .2s;
+}
+
+/* Create the checkmark/indicator (hidden when not checked) */
+.checkmark:after {
+  content: "";
+  position: absolute;
+  display: none;
+}
+
+/* Show the checkmark when checked */
+.container input:checked~.checkmark:after {
+  display: block;
+}
+
+/* Style the checkmark/indicator */
+.container .checkmark:after {
+  left: 10px;
+  top: 6px;
+  width: 5px;
+  height: 10px;
+  border: solid black;
+  border-width: 0 2px 2px 0;
+  -webkit-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  transform: rotate(45deg);
 }
 </style>

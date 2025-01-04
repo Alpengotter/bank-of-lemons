@@ -30,3 +30,5 @@ coverage
 *.tsbuildinfo
 
 certs
+certificate.crt
+certificate.key
