@@ -1,9 +1,9 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import HomeView from '../views/HomeView.vue'
 import LoginView from '@/views/LoginView.vue'
 import EmployersView from '@/views/EmployersView.vue'
 import StatisticsView from '@/views/StatisticsView.vue'
 import ReportsView from '@/views/ReportsView.vue'
+import OrdersView from '@/views/OrdersView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -11,7 +11,7 @@ const router = createRouter({
     {
       path: '/',
       name: 'home',
-      component: HomeView,
+      component: OrdersView,
       meta: { requiresAuth: true, roles: ['ADMIN'] },
     },
     {
