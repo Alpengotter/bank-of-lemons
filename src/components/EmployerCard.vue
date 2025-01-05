@@ -47,9 +47,9 @@ const isItemSelected = computed(() => {
   return selectedEmployersStore.selectedItems.some(item => item.id === props.user.id)
 })
 
-// FIXME: добавить типизацию
-const toggleSelection = (event) => {
-  if (event.target.checked) {
+const toggleSelection = (event: Event) => {
+  const target = event.target as HTMLInputElement;
+  if (target.checked) {
     selectedEmployersStore.selectedItems.push(props.user);
   } else {
     selectedEmployersStore.selectedItems = selectedEmployersStore.selectedItems.filter((user) => user.id !== props.user.id);
