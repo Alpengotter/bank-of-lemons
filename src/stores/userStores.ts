@@ -83,7 +83,7 @@ export const useUserStore = defineStore('users', {
       }
     },
 
-    async updateWallet(id: number | string, wallet: { lemons: number; diamonds: number }) {
+    async updateWallet(id: number, wallet: { lemons: number; diamonds: number }) {
       this.loading = true
       this.error = null
 
