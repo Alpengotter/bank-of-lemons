@@ -38,7 +38,8 @@
           </div>
         </div>
         <input class="input" type="text" placeholder="0" v-model="inputValue">
-        <Button appearance="primary" class="submit" @click="handleSubmit(employer)">
+        <Button appearance="primary" class="submit" @click="handleSubmit(employer)" :disabled="inputValue"
+          :class="{ 'disabled': !inputValue }">
           OK
         </Button>
       </div>
@@ -145,6 +146,7 @@ const setActiveCurrency = (index: number) => {
 const deactivate = async () => {
   try {
     await userStore.deactivateEmployerById(props.employerId)
+    props.close();
   } catch (error) {
     console.error('Error deactivating employer:', error);
   }
@@ -153,6 +155,7 @@ const deactivate = async () => {
 
 const props = defineProps<{
   employerId: number,
+  close: () => void;
   updateWallet: (id: number, wallet: {
     lemons: number;
     diamonds: number;
@@ -318,5 +321,9 @@ footer {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.disabled {
+  background-color: rgba(0, 0, 0, 0.1);
 }
 </style>

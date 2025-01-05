@@ -29,6 +29,10 @@ export default defineConfig(({ command, mode }) => {
             credentials: 'include',
           },
         },
+        https: {
+          key: fs.readFileSync(path.resolve(__dirname, './certificate.key')),
+          cert: fs.readFileSync(path.resolve(__dirname, './certificate.crt')),
+        },
       }),
     },
     plugins: [vue(), vueJsx(), vueDevTools()],

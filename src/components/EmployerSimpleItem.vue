@@ -1,81 +1,45 @@
 <template>
-  <div class="employer glass">
+  <div class="employer">
     <div class="info-container">
-      <label class="container" v-if="selectMode">
-        <input type="checkbox" v-model="isItemSelected" @change="toggleSelection" />
-        <span class="checkmark"></span>
-      </label>
       <div class="info">
-        <p class="primary-text">{{ user.lastName }} {{ user.firstName }}</p>
-        <p class="secondary-text">{{ user.email }}</p>
+        <p class="primary-text">{{ employee.lastName }} {{ employee.firstName }}</p>
       </div>
     </div>
 
-    <div class="department">
-      <p class="secondary-text">{{ user.jobTitle }}</p>
-    </div>
-
-    <div class="wallet" @click="showUserInfo(user)">
+    <div class="wallet">
       <div class="wallet-lemons">
-        <p class="wallet-text">{{ user.lemons }} 🍋</p>
+        <p class="wallet-text">{{ employee.lemons }} 🍋</p>
 
       </div>
 
       <div class="divider" />
 
       <div class="wallet-diamonds">
-        <p class="wallet-text">{{ user.diamonds }} 💎</p>
+        <p class="wallet-text">{{ employee.diamonds }} 💎</p>
       </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { useSelectedUsersStore } from '@/stores/selectedUsersStore';
 import type { User } from '@/types/user';
-import { computed } from 'vue';
 
 const props = defineProps<{
-  user: User;
-  selectMode: boolean;
-  showUserInfo: (user: User) => void;
+  employee: User;
 }>();
 
-const selectedEmployersStore = useSelectedUsersStore();
-
-const isItemSelected = computed(() => {
-  return selectedEmployersStore.selectedItems.some(item => item.id === props.user.id)
-})
-
-// FIXME: добавить типизацию
-const toggleSelection = (event) => {
-  if (event.target.checked) {
-    selectedEmployersStore.selectedItems.push(props.user);
-  } else {
-    selectedEmployersStore.selectedItems = selectedEmployersStore.selectedItems.filter((user) => user.id !== props.user.id);
-  }
-};
 </script>
 
 <style scoped>
-.title {
-  font-style: normal;
-  font-weight: 700;
-  font-size: 24px;
-  line-height: 29px;
-
-  margin-bottom: 27px;
-
-  color: var(--color-text);
-}
-
 .employer {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 16px 30px;
+  padding: 4px 15px;
   border-radius: 24px;
   margin-bottom: 10px;
+
+  background-color: #fff;
 }
 
 .info-container {
@@ -90,6 +54,10 @@ const toggleSelection = (event) => {
   width: 250px;
 }
 
+.info>.primary-text {
+  font-size: 14px;
+}
+
 .department {
   width: 300px;
 }
@@ -98,14 +66,6 @@ const toggleSelection = (event) => {
   display: flex;
   flex-direction: row;
   padding: 6px 12px;
-  transition: .2s;
-  cursor: pointer;
-}
-
-.wallet:hover {
-  background-color: #ffffff80;
-  padding: 6px 12px;
-  border-radius: 99px;
   transition: .2s;
 }
 
@@ -119,7 +79,7 @@ const toggleSelection = (event) => {
 .wallet-text {
   font-style: normal;
   font-weight: 500;
-  font-size: 18px;
+  font-size: 14px;
   line-height: 22px;
 
   color: var(--color-text);

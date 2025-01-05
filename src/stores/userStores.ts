@@ -33,15 +33,36 @@ export const useUserStore = defineStore('users', {
 
   actions: {
     // Fetch all users
-    async fetchUsers() {
+    // FIXME: rename to employers
+    async fetchUsers(offset = 0, limit = 200) {
       this.loading = true
       this.error = null
       try {
-        const response = await makeRequest<User[]>(`employers?offset=0&limit=200`, 'get')
+        const response = await makeRequest<User[]>(
+          `employers?offset=${offset}&limit=${limit}`,
+          'get',
+        )
 
         this.users = response
       } catch (error) {
         this.error = error instanceof Error ? error.message : 'Failed to fetch users'
+      } finally {
+        this.loading = false
+      }
+    },
+
+    async searchEmployers(searchParameter: string) {
+      this.loading = true
+      this.error = null
+      try {
+        const response = await makeRequest<User[]>(
+          `employers/find-by-param?searchParameter=${searchParameter}`,
+          'get',
+        )
+
+        this.users = response
+      } catch (error) {
+        this.error = error instanceof Error ? error.message : 'Failed to search users'
       } finally {
         this.loading = false
       }
@@ -139,6 +160,36 @@ export const useUserStore = defineStore('users', {
         return response
       } catch (error) {
         this.error = error instanceof Error ? error.message : 'Failed to create employer '
+      } finally {
+        this.loading = false
+      }
+    },
+
+    async multipleAccrual({
+      userIds,
+      currency,
+      count,
+    }: {
+      userIds: number[]
+      currency: string
+      count: number
+    }) {
+      this.loading = true
+      this.error = null
+
+      try {
+        const response = await makeRequest<User>(`employers/multiple-currency`, 'put', {
+          userIds,
+          currency,
+          count,
+        })
+
+        await this.fetchUsers()
+        await this.employersStat()
+
+        return response
+      } catch (error) {
+        this.error = error instanceof Error ? error.message : 'Failed to update employers '
       } finally {
         this.loading = false
       }
