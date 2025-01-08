@@ -21,6 +21,7 @@
 <script lang="ts">
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
+import Cookies from 'js-cookie';
 
 const REQUEST_TIMEOUT = 10000;
 
@@ -65,7 +66,8 @@ export default {
           if (!data.accessToken) {
             throw new Error('Invalid token received');
           }
-          localStorage.setItem('token', data.accessToken);
+
+          Cookies.set('token', data.accessToken, { expires: 14 });
           router.push({ name: 'home' });
           break;
         }
