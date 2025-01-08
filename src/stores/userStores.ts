@@ -29,6 +29,12 @@ export const useUserStore = defineStore('users', {
   getters: {
     // Get all users
     getAllUsers: (state) => state.users,
+    // Получить пользователя по ID
+    getUserById: (state) => {
+      return (id: number) => {
+        return state.users.find((user) => user.id === id) || null
+      }
+    },
   },
 
   actions: {

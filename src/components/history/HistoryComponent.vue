@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <div v-if="historyStore.history.length && employer" v-for="history of transformedHistory" class="history-container">
+    <div v-if="historyStore.history.length" v-for="history of transformedHistory" class="history-container">
       <div>
         <p class="date" :class="{ current: format(new Date(history[0].date)) === currentDate }">{{ format(new
           Date(history[0].date)) }}</p>
@@ -34,16 +34,23 @@ const currentDate = ref();
 const transformedHistory = ref<TransformedHistory>({});
 
 onMounted(async () => {
-  if (props.employer?.id) {
-    try {
+  try {
+    if (props.employer?.id) {
       await historyStore.getHistoryByEmployer(props.employer.id);
-      transformedHistory.value = transformHistory();
-    } catch (error) {
-      console.error('Error fetching history:', error);
+    } else {
+      const dateFrom = format(new Date());
+      const dateTo = format(getNextMonthDate(new Date()))
+      await historyStore.fetchHistory({
+        dateFrom,
+        dateTo
+      });
     }
+  } catch (error) {
+    console.error('Error fetching history:', error);
+  } finally {
+    transformedHistory.value = transformHistory();
+    currentDate.value = format(new Date());
   }
-
-  currentDate.value = format(new Date());
 })
 
 function transformHistory() {
@@ -68,6 +75,15 @@ const format = (date: Date) => {
   return `${day}.${month}.${year}`;
 }
 
+function getNextMonthDate(currentDate: Date): Date {
+  const currentMonth = currentDate.getMonth();
+  const currentYear = currentDate.getFullYear();
+
+  const nextMonth = (currentMonth + 1) % 12;
+  const nextYear = currentYear + Math.floor((currentMonth + 1) / 12);
+
+  return new Date(nextYear, nextMonth, currentDate.getDate());
+}
 
 const props = defineProps<{
   employer?: User;

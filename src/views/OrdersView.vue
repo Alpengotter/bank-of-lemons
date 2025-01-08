@@ -33,6 +33,12 @@
       </span>
     </div>
   </main>
+  <!-- employer info modal -->
+  <ModalView :show="isHistoryModalOpen" @close-modal="toggleHistoryModal">
+    <template #content>
+      <HistoryModal />
+    </template>
+  </ModalView>
 </template>
 
 <script setup lang="ts">
@@ -42,6 +48,8 @@ import Button from '../components/Button.vue';
 import OrderItem from '../components/orders/OrderItem.vue';
 import { useUserStore } from '@/stores/userStores';
 import Preloader from '@/components/Preloader.vue';
+import HistoryModal from '@/components/modals/HistoryModal.vue';
+import ModalView from '@/components/ModalView.vue';
 
 const ordersStore = useOrderStores();
 const userStore = useUserStore();
