@@ -230,9 +230,7 @@ const makeRequest = async <T>(
 
     return response.data
   } catch (error) {
-    if (axios.isAxiosError(error)) {
-      throw new Error(error.response?.data?.message || 'Request failed')
-    }
+    console.log('🚀 ~ error:', error)
     throw error
   }
 }
