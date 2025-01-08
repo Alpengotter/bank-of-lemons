@@ -1,7 +1,8 @@
 // stores/userStore.ts
 import { defineStore } from 'pinia'
 import { type Order } from '@/types/order'
-import axios from 'axios'
+import axios from '@/utils/axios'
+import Cookies from 'js-cookie'
 
 interface OrderState {
   orders: Order[]
@@ -58,7 +59,7 @@ const makeRequest = async <T>(
   method: 'get' | 'post' | 'put',
   data?: unknown,
 ): Promise<T> => {
-  const accessToken = localStorage.getItem('token')
+  const accessToken = Cookies.get('token')
 
   if (!accessToken) {
     throw new Error('No access token available')

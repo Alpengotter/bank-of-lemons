@@ -4,6 +4,7 @@ import EmployersView from '@/views/EmployersView.vue'
 import StatisticsView from '@/views/StatisticsView.vue'
 import ReportsView from '@/views/ReportsView.vue'
 import OrdersView from '@/views/OrdersView.vue'
+import Cookies from 'js-cookie'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -42,7 +43,7 @@ const router = createRouter({
 })
 
 function isAuthenticated() {
-  return !!localStorage.getItem('token')
+  return !!Cookies.get('token')
 }
 
 router.beforeEach((to, from, next) => {

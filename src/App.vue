@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import { RouterLink, RouterView } from 'vue-router'
-import Menu from './components/Menu.vue';
+import { RouterView } from 'vue-router';
 import { computed } from 'vue';
+import { ref } from 'vue';
+import Menu from './components/Menu.vue';
+import Cookies from 'js-cookie';
 
-const isAuth = computed(() => {
-  return localStorage.getItem('token');
-});
+const isAuth = ref(Cookies.get('token') !== undefined);
 </script>
 
 <template>
@@ -14,9 +14,9 @@ const isAuth = computed(() => {
     <header class="header">
       <img alt="Vue logo" class="header__logo" src="@/assets/logo.png" width="153" height="50" />
 
-      <div class="header__menu" v-if="isAuth">
+      <div class="header__menu">
         <Menu />
-        <div class="header__profile glass">🔔</div>
+        <!-- <div class="header__profile glass">🔔</div> -->
         <div class="header__profile glass">🧑‍💻</div>
       </div>
     </header>
