@@ -2,50 +2,57 @@
 import { defineStore } from 'pinia'
 import { type Order } from '@/types/order'
 import axios from 'axios'
+import type { HistoryItem } from '@/types/historyItem'
 
 interface OrderState {
-  orders: Order[]
+  history: HistoryItem[]
   loading: boolean
   error: string | null
 }
 
-export const useOrderStores = defineStore('orders', {
+export const useHistoryStores = defineStore('history', {
   state: (): OrderState => ({
-    orders: [],
+    history: [],
     loading: false,
     error: null,
   }),
 
   getters: {
-    getAllOrders: (state) => state.orders,
+    getAllHistory: (state) => state.history,
   },
 
   actions: {
-    async fetchOrders() {
+    async fetchHistory(dateFrom: string, dateTo: string) {
       this.loading = true
       this.error = null
       try {
-        const response = await makeRequest<Order[]>(`orders`, 'get')
+        const response = await makeRequest<HistoryItem[]>(
+          `history/find-by-date-and-param?dateFrom=30.12.2024&dateTo=30.01.2025&searchParameter=`,
+          'get',
+        )
 
-        this.orders = response
+        this.history = response
       } catch (error) {
-        this.error = error instanceof Error ? error.message : 'Failed to fetch orders'
+        this.error = error instanceof Error ? error.message : 'Failed to fetch history'
       } finally {
         this.loading = false
       }
     },
-    async changeStatus(id: number, status: string) {
+    async getHistoryByEmployer(id: number) {
       this.loading = true
       this.error = null
       try {
-        const response = await makeRequest<Order[]>(`orders/change-status`, 'put', {
-          id,
-          status,
-        })
+        const response = await makeRequest<HistoryItem[]>(`history/find-by-id?id=${id}`, 'get')
 
-        await this.fetchOrders()
+        this.history = response
+          .sort((a, b) => {
+            if (a.date < b.date) return 1
+            if (a.date > b.date) return -1
+            return 0
+          })
+          .slice(0, 5)
       } catch (error) {
-        this.error = error instanceof Error ? error.message : 'Failed to update order'
+        this.error = error instanceof Error ? error.message : 'Failed to fetch history by employer'
       } finally {
         this.loading = false
       }
