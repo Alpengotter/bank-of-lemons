@@ -38,8 +38,8 @@
           </div>
         </div>
         <input class="input" type="text" placeholder="0" v-model="inputValue">
-        <Button appearance="primary" class="submit" @click="handleSubmit(employer)" :disabled="inputValue"
-          :class="{ 'disabled': !inputValue }">
+        <Button appearance="primary" class="submit" @click="handleSubmit(employer)" :disabled="!inputValue.length"
+          :class="{ 'disabled': !inputValue.length }">
           OK
         </Button>
       </div>
@@ -47,9 +47,7 @@
       <div class="history">
         <p class="history-title">Последние операции</p>
         <div class="history-list">
-          <div class="history-empty">
-            <p>Нет последних операций</p>
-          </div>
+          <HistoryView :employer="employer" />
         </div>
       </div>
     </main>
@@ -75,6 +73,7 @@ import { useUserStore } from '@/stores/userStores';
 import type { User } from '@/types/user';
 import { onMounted, ref } from 'vue';
 import Preloader from './Preloader.vue';
+import HistoryView from './history/HistoryView.vue';
 
 const userStore = useUserStore();
 
