@@ -10,6 +10,12 @@ interface OrderState {
   error: string | null
 }
 
+interface FetchProps {
+  dateFrom: string
+  dateTo: string
+  searchParam?: string
+}
+
 export const useHistoryStores = defineStore('history', {
   state: (): OrderState => ({
     history: [],
@@ -22,16 +28,20 @@ export const useHistoryStores = defineStore('history', {
   },
 
   actions: {
-    async fetchHistory(dateFrom: string, dateTo: string) {
+    async fetchHistory({ dateFrom, dateTo, searchParam = '' }: FetchProps) {
       this.loading = true
       this.error = null
       try {
         const response = await makeRequest<HistoryItem[]>(
-          `history/find-by-date-and-param?dateFrom=30.12.2024&dateTo=30.01.2025&searchParameter=`,
+          `history/find-by-date-and-param?dateFrom=${dateFrom}&dateTo=${dateTo}&searchParameter=${searchParam}`,
           'get',
         )
 
-        this.history = response
+        this.history = response.sort((a, b) => {
+          if (a.date < b.date) return 1
+          if (a.date > b.date) return -1
+          return 0
+        })
       } catch (error) {
         this.error = error instanceof Error ? error.message : 'Failed to fetch history'
       } finally {

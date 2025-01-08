@@ -72,6 +72,7 @@ const emitClose = () => {
 }
 
 .modal-body {
+  height: 100%;
   overflow-y: auto;
 }
 

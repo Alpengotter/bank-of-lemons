@@ -47,7 +47,7 @@
       <div class="history">
         <p class="history-title">Последние операции</p>
         <div class="history-list">
-          <HistoryView :employer="employer" />
+          <HistoryComponent :employer="employer" />
         </div>
       </div>
     </main>
@@ -73,7 +73,7 @@ import { useUserStore } from '@/stores/userStores';
 import type { User } from '@/types/user';
 import { onMounted, ref } from 'vue';
 import Preloader from './Preloader.vue';
-import HistoryView from './history/HistoryView.vue';
+import HistoryComponent from './history/HistoryComponent.vue';
 
 const userStore = useUserStore();
 
