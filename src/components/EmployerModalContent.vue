@@ -124,6 +124,14 @@ const handleSubmit = async (employer: User | undefined) => {
     }
   }
 
+  if (lemons < 0) {
+    lemons = 0;
+  }
+
+  if (diamonds < 0) {
+    diamonds = 0;
+  }
+
   try {
     await props.updateWallet(employer.id, { lemons, diamonds });
     await refresh();

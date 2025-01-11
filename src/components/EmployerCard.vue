@@ -90,9 +90,7 @@ const toggleSelection = (event: Event) => {
   width: 250px;
 }
 
-.department {
-  width: 300px;
-}
+.department {}
 
 .wallet {
   display: flex;
