@@ -73,7 +73,7 @@ onMounted(() => {
 
 
 const prepareOrderItem = () => {
-  const items = props.order.items.replaceAll('&quot;', '').split(';');
+  const items = props.order.items.replace(/&quot;/g, '').split(';');
   const result: Product[] = [];
 
   items.forEach(item => {
