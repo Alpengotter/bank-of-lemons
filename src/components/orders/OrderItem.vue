@@ -6,7 +6,8 @@
       <!-- employer -->
       <div class="employer">
         <!-- name -->
-        <p class="fullname primary-text">{{ employer.lastName }} {{ employer.firstName }}</p>
+        <p class="fullname primary-text">{{ employer.lastName }}</p>
+        <p class="fullname primary-text">{{ employer.firstName }}</p>
         <!-- email -->
         <p class="email secondary-text">{{ employer.email }}</p>
       </div>
@@ -18,7 +19,7 @@
       <div class="product" v-for="preparedOrderItem in preparedOrderItems" :key="preparedOrderItem.title">
         <p class="secondary-text product-title">{{ preparedOrderItem.title }}</p>
         <p class="secondary-text product-count">{{ preparedOrderItem.count }}</p>
-        <p class="secondary-text product-total">{{ preparedOrderItem.total }} 🍋</p>
+        <p class="secondary-text product-total">{{ preparedOrderItem.total }}&nbsp;🍋</p>
       </div>
     </div>
     <!-- order summary -->
@@ -72,7 +73,7 @@ onMounted(() => {
 
 
 const prepareOrderItem = () => {
-  const items = props.order.items.split(';');
+  const items = props.order.items.replaceAll('&quot;', '').split(';');
   const result: Product[] = [];
 
   items.forEach(item => {
@@ -129,6 +130,10 @@ const props = defineProps<{
 </script>
 
 <style scoped>
+.fullname:not(:first-child) {
+  margin-bottom: 8px;
+}
+
 .order-item {
   display: flex;
   flex-direction: column;
@@ -200,5 +205,7 @@ const props = defineProps<{
 
 .actions div {
   cursor: pointer;
+  width: 32px;
+  height: 32px;
 }
 </style>
