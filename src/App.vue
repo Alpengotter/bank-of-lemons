@@ -12,7 +12,9 @@ const isAuth = ref(Cookies.get('token') !== undefined);
   <div class="app-wrapper">
 
     <header class="header">
-      <img alt="Vue logo" class="header__logo" src="@/assets/logo.png" width="153" height="50" />
+      <RouterLink to="/" class="header__logo-link">
+        <img alt="Vue logo" class="header__logo" src="@/assets/logo.png" width="153" height="50" />
+      </RouterLink>
 
       <div class="header__menu">
         <Menu />
