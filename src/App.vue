@@ -1,30 +1,116 @@
 <script setup lang="ts">
-import { RouterLink, RouterView } from 'vue-router'
+import { RouterView } from 'vue-router';
+import { computed } from 'vue';
+import { ref } from 'vue';
 import Menu from './components/Menu.vue';
+import Cookies from 'js-cookie';
+
+const isAuth = ref(Cookies.get('token') !== undefined);
 </script>
 
 <template>
-  <header>
-    <img alt="Vue logo" class="logo" src="@/assets/logo.svg" width="125" height="125" />
+  <div class="app-wrapper">
 
-    <div class="wrapper">
-      <Menu />
+    <header class="header">
+      <RouterLink to="/" class="header__logo-link">
+        <img alt="Vue logo" class="header__logo" src="@/assets/logo.png" width="153" height="50" />
+      </RouterLink>
 
-    </div>
-  </header>
+      <div class="header__menu">
+        <Menu />
+        <!-- <div class="header__profile glass">🔔</div> -->
+        <div class="header__profile glass">🧑‍💻</div>
+      </div>
+    </header>
 
-  <RouterView />
+    <main>
+      <RouterView />
+    </main>
+
+
+    <footer>
+      <div class="footer-container">
+
+      </div>
+    </footer>
+  </div>
 </template>
 
 <style scoped>
-header {
-  line-height: 1.5;
-  max-height: 100vh;
+.app-wrapper {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
-.logo {
+header {
+  line-height: 1.5;
+  display: flex;
+  justify-content: space-between;
+
+  margin-bottom: 80px;
+  margin-top: 20px;
+}
+
+main {
+  flex: 1;
+}
+
+footer {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  padding: 16px;
+}
+
+.footer-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  max-width: 1140px;
+  width: 100%;
+}
+
+.company {
+  font-style: normal;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 17px;
+
+  color: #5A5A5A;
+}
+
+.header__logo {
   display: block;
-  margin: 0 auto 2rem;
+}
+
+.header__menu {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.header__profile {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 50px;
+  height: 50px;
+
+  border-radius: 999px;
+
+  font-style: normal;
+  font-weight: 500;
+  font-size: 18px;
+  line-height: 22px;
+
+  color: var(--color-text);
+
+  cursor: pointer;
 }
 
 nav {

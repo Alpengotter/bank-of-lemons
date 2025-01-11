@@ -1,9 +1,10 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import HomeView from '../views/HomeView.vue'
 import LoginView from '@/views/LoginView.vue'
-import EmployersView from '@/views/EmployersView.vue';
-import StatisticsView from '@/views/StatisticsView.vue';
-import ReportsView from '@/views/ReportsView.vue';
+import EmployersView from '@/views/EmployersView.vue'
+import StatisticsView from '@/views/StatisticsView.vue'
+import ReportsView from '@/views/ReportsView.vue'
+import OrdersView from '@/views/OrdersView.vue'
+import Cookies from 'js-cookie'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -11,52 +12,58 @@ const router = createRouter({
     {
       path: '/',
       name: 'home',
-      component: HomeView,
-      meta: { requiresAuth: true }
+      component: OrdersView,
+      meta: { requiresAuth: true, roles: ['ADMIN'] },
     },
     {
       path: '/login',
       name: 'login',
       component: LoginView,
-      meta: { requiresAuth: false }
+      meta: { requiresAuth: false, roles: ['ADMIN'] },
     },
     {
       path: '/employers',
       name: 'employers',
       component: EmployersView,
-      meta: { requiresAuth: false }
+      meta: { requiresAuth: true, roles: ['ADMIN'] },
     },
     {
       path: '/statistics',
       name: 'statistics',
       component: StatisticsView,
-      meta: { requiresAuth: false }
+      meta: { requiresAuth: true, roles: ['MASTER'] },
     },
     {
       path: '/reports',
       name: 'reports',
       component: ReportsView,
-      meta: { requiresAuth: false }
+      meta: { requiresAuth: true, roles: ['MASTER'] },
     },
   ],
 })
 
 function isAuthenticated() {
-  return !!localStorage.getItem('token');
+  return !!Cookies.get('token')
 }
 
 router.beforeEach((to, from, next) => {
-  if (to.matched.some(record => record.meta.requiresAuth)) {
+  const userRoles = ['ADMIN']
+
+  if (to.matched.some((record) => record.meta.requiresAuth)) {
     if (!isAuthenticated()) {
-      next({ name: 'login' });
-    } else {
-      next();
+      return next({ name: 'login' })
     }
-  } else {
-    next();
+
+    if (to.meta.roles) {
+      // Если для страницы заданы роли, проверяем доступ
+      const hasRole = (to.meta.roles as Array<string>).some((role) => userRoles.includes(role))
+      if (!hasRole) {
+        return next({ name: 'home' })
+      }
+    }
   }
-});
 
-
+  next()
+})
 
 export default router

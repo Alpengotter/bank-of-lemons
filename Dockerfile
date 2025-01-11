@@ -1,23 +1,33 @@
-# Используем официальный Node.js образ в качестве базового
-FROM node:18
+FROM node:20 AS build
 
-# Создаем директорию для приложения внутри контейнера
 WORKDIR /app
 
-# Копируем package.json и yarn.lock для установки зависимостей
 COPY package.json yarn.lock ./
 
-# Устанавливаем зависимости через Yarn
 RUN yarn install
 
-# Копируем весь исходный код в контейнер
+RUN yarn cache clean
+
 COPY . .
 
-# Собираем проект
 RUN yarn build
 
-# Сообщаем Docker, что контейнер слушает на порту 5173
-EXPOSE 5173
+FROM nginx:alpine
 
-# Запускаем приложение
-CMD ["yarn", "run", "dev", "--", "--host"]
+WORKDIR /etc/nginx/ssl
+
+ARG CERTIFICATE_CRT
+ARG CERTIFICATE_KEY
+ARG CERTIFICATE_CA_CRT
+
+RUN echo "$CERTIFICATE_CRT" > /etc/nginx/ssl/certificate.crt
+RUN echo "$CERTIFICATE_KEY" > /etc/nginx/ssl/certificate.key
+RUN echo "$CERTIFICATE_CA_CRT" > /etc/nginx/ssl/certificate_ca.crt
+
+COPY --from=build /app/dist /usr/share/nginx/html
+
+COPY nginx.conf /etc/nginx/nginx.conf
+
+EXPOSE 80 443
+
+CMD ["nginx", "-g", "daemon off;"]

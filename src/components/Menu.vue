@@ -1,10 +1,10 @@
 <template>
-  <div class="menu">
+  <div class="menu glass">
     <nav>
       <RouterLink to="/" class="nav-item" active-class="active">Заказы</RouterLink>
       <RouterLink to="/employers" class="nav-item" active-class="active">Сотрудники</RouterLink>
-      <RouterLink to="/statistics" class="nav-item" active-class="active">Статистика</RouterLink>
-      <RouterLink to="/reports" class="nav-item" active-class="active">Отчеты</RouterLink>
+      <RouterLink to="/statistics" class="nav-item" active-class="active" v-if="false">Статистика</RouterLink>
+      <RouterLink to="/reports" class="nav-item" active-class="active" v-if="false">Отчеты</RouterLink>
     </nav>
   </div>
 </template>
@@ -18,9 +18,9 @@ import { ref, onMounted, onUnmounted } from 'vue'
 <style scoped>
 .menu {
   display: flex;
-  background-color: var(--vt-c-white);
+  /* background-color: var(---color-background-transparent); */
   border-radius: 999px;
-  padding: 8px;
+  padding: 6px;
 }
 
 nav {
@@ -29,7 +29,6 @@ nav {
 
 .nav-item {
   padding: 8px 16px;
-  background-color: var(--vt-c-white);
   color: var(--color-text);
   border-radius: 999px;
   text-decoration: none;
