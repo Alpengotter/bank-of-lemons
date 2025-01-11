@@ -30,8 +30,6 @@ body {
   background-color: #fff;
   opacity: 0;
   background: transparent;
-
-  display: none;
 }
 
 ::-webkit-scrollbar-thumb {
