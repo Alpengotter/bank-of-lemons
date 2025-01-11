@@ -128,7 +128,7 @@ header {
 
 .orders-list {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1fr;
+  grid-template-columns: 280px 280px 280px 280px;
   gap: 6px;
 }
 
