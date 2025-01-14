@@ -90,7 +90,7 @@ export const useUserStore = defineStore('users', {
       }
     },
 
-    async updateWallet(id: number, wallet: { lemons: number; diamonds: number }) {
+    async updateWallet(id: number, wallet: { lemons: number; diamonds: number; comment: string }) {
       this.loading = true
       this.error = null
 
@@ -98,6 +98,7 @@ export const useUserStore = defineStore('users', {
         const response = await makeRequest<User>(`employers/currency/${id}`, 'put', {
           lemons: wallet.lemons,
           diamonds: wallet.diamonds,
+          comment: wallet.comment,
         })
 
         if (response && response.id) {
@@ -176,10 +177,12 @@ export const useUserStore = defineStore('users', {
       userIds,
       currency,
       count,
+      comment,
     }: {
       userIds: number[]
       currency: string
       count: number
+      comment: string
     }) {
       this.loading = true
       this.error = null
@@ -189,6 +192,7 @@ export const useUserStore = defineStore('users', {
           userIds,
           currency,
           count,
+          comment,
         })
 
         await this.fetchUsers()
