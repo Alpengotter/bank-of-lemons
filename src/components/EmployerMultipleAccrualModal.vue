@@ -25,17 +25,35 @@ const operations = ['+', '-'];
 const selectedEmployersStore = useSelectedUsersStore();
 const userStore = useUserStore();
 
-const handleSubmit = async ({ currency, operation, value }: { currency: string, operation: string, value: number }) => {
+const handleSubmit = async ({ currency, operation, value, comment }: { currency: string, operation: string, value: number, comment: string }) => {
   currency = currency === '🍋' ? 'lemons' : 'diamonds';
   const userIds = selectedEmployersStore.selectedItems.map((item: User) => item.id);
   try {
-    await userStore.multipleAccrual({ userIds, currency, count: value });
+    await userStore.multipleAccrual({ userIds, currency, count: value, comment });
+
+    userIds.forEach((value) => {
+      const user = userStore.getUserById(value);
+      if (user) {
+        sendNotification(user.email, value, currency, comment)
+      }
+    })
+
   } catch (e) {
     console.log("🚀 ~ handleSubmit ~ e:", e)
   } finally {
     props.close();
   }
 };
+
+const sendNotification = (email: string, count: number, currency: string, comment: string) => {
+  const langCurrency = currency === 'lemons' ? 'лимонов' : 'алмазов'
+  const subject = 'Магазин мерча Зарплаты.ру';
+  const body = `Привет!%0D%0AМы начислили тебе ${count} ${langCurrency} "${comment}".%0D%0AПереходи в наш магазин мерча store.zarplata.ru и оформляй заказ. Вперед за покупками!`
+  const mailto = `
+            mailto:${email}?subject=${subject}&body=${body}
+        `;
+  window.location.href = mailto;
+}
 
 const props = defineProps<{
   close: () => void;
