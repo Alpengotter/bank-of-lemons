@@ -116,6 +116,7 @@ const updateEmployerWallet = async () => {
     await userStore.updateWallet(props.employer?.id, {
       lemons: props.employer.lemons - parseInt(props.order.total, 10),
       diamonds: props.employer.diamonds,
+      comment: 'Подтверждение заказа'
     });
   } catch (error) {
     console.error('Error updating employer wallet:', error);
