@@ -17,7 +17,6 @@ export const makeRequest = async <T>(
   const headers = {
     'Content-Type': 'application/json',
     Authorization: `Bearer ${accessToken}`,
-    'User-Agent': 'bankOfLemons/3.0.2',
   }
 
   try {
