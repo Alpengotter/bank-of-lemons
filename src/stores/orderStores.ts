@@ -1,8 +1,7 @@
 // stores/userStore.ts
 import { defineStore } from 'pinia'
 import { type Order } from '@/types/order'
-import axios from '@/utils/axios'
-import Cookies from 'js-cookie'
+import { makeRequest } from '@/utils/makeRequest'
 
 interface OrderState {
   orders: Order[]
@@ -53,34 +52,3 @@ export const useOrderStores = defineStore('orders', {
     },
   },
 })
-
-const makeRequest = async <T>(
-  endpoint: string,
-  method: 'get' | 'post' | 'put',
-  data?: unknown,
-): Promise<T> => {
-  const accessToken = Cookies.get('token')
-
-  if (!accessToken) {
-    throw new Error('No access token available')
-  }
-
-  const headers = {
-    'Content-Type': 'application/json',
-    Authorization: `Bearer ${accessToken}`,
-  }
-
-  try {
-    const response = await axios({
-      url: `/api/v1/${endpoint}`,
-      method,
-      headers,
-      ...(method !== 'get' && { data }),
-    })
-
-    return response.data
-  } catch (error) {
-    console.log('🚀 ~ error:', error)
-    throw error
-  }
-}
