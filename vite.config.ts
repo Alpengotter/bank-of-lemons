@@ -36,6 +36,9 @@ export default defineConfig(({ command, mode }) => {
       }),
     },
     plugins: [vue(), vueJsx(), vueDevTools()],
+    build: {
+      minify: 'terser',
+    },
     resolve: {
       alias: {
         '@': fileURLToPath(new URL('./src', import.meta.url)),
