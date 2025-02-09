@@ -32,9 +32,9 @@ COPY nginx.conf /etc/nginx/nginx.conf
 
 # Conditionally copy the environment-specific configuration file
 RUN if [ "$ENV" = "prod" ]; then \
-        cp /tmp/conf/prod.conf /etc/nginx/conf.d/default.conf; \
+        cp conf/prod.conf /etc/nginx/conf.d/default.conf; \
     elif [ "$ENV" = "uat" ]; then \
-        cp /tmp/conf/uat.conf /etc/nginx/conf.d/default.conf; \
+        cp conf/uat.conf /etc/nginx/conf.d/default.conf; \
     fi
 
 EXPOSE 443
