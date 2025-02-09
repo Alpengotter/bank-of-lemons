@@ -14,6 +14,8 @@ RUN yarn build
 
 FROM nginx:alpine
 
+ARG ENV
+
 WORKDIR /etc/nginx/ssl
 
 ARG CERTIFICATE_CRT
@@ -27,6 +29,13 @@ RUN echo "$CERTIFICATE_CA_CRT" > /etc/nginx/ssl/certificate_ca.crt
 COPY --from=build /app/dist /usr/share/nginx/html
 
 COPY nginx.conf /etc/nginx/nginx.conf
+
+# Conditionally copy the environment-specific configuration file
+RUN if [ "$ENV" = "prod" ]; then \
+        cp /tmp/conf/prod.conf /etc/nginx/conf.d/default.conf; \
+    elif [ "$ENV" = "uat" ]; then \
+        cp /tmp/conf/uat.conf /etc/nginx/conf.d/default.conf; \
+    fi
 
 EXPOSE 443
 

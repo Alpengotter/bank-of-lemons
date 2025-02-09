@@ -1,0 +1,100 @@
+name: Build and Deploy to Prod Server
+
+on:
+  push:
+    branches:
+      - uat
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    outputs:
+      docker_image: ${{ steps.build_docker_image.outputs.image }}
+
+    steps:
+      # 1. Скачиваем код репозитория.
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # 2. Устанавливаем зависимости и собираем проект.
+      - name: Install dependencies and build project
+        run: |
+          yarn install
+          yarn build
+
+      # 3. Создаём и сохраняем Docker-образ.
+      - name: Build Docker image
+        id: build_docker_image
+        run: |
+          docker build --build-arg CERTIFICATE_CRT="${{ secrets.CERTIFICATE_CRT }}" \
+                       --build-arg CERTIFICATE_KEY="${{ secrets.CERTIFICATE_KEY }}" \
+                       --build-arg CERTIFICATE_CA_CRT="${{ secrets.CERTIFICATE_CA_CRT }}" \
+                       --build-arg ENV="uat" \
+                       -t bank-of-lemons-web:latest .
+          docker save bank-of-lemons-web:latest > bank-of-lemons-web.tar
+          echo "::set-output name=image::bank-of-lemons-web.tar"  # Используете set-output для передачи данных
+
+      # 4. Загружаем артефакт Docker-образа.
+      - name: Upload Docker image artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: docker-image
+          path: bank-of-lemons-web.tar # Обратите внимание на название файла.
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
+
+    steps:
+      # 1. Download Docker image artifact.
+      - name: Download Docker image artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: docker-image
+          path: .
+
+      # 2. Setup ssh-agent and add key.
+      - name: Setup SSH
+        uses: webfactory/ssh-agent@v0.5.3
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+      # 3. Add server to known_hosts.
+      - name: Add server to known_hosts
+        run: |
+          ssh-keyscan -H uat.bankoflemons.ru >> ~/.ssh/known_hosts
+
+      # 4. Clean up old files from the server.
+      - name: Clean up old files on server
+        run: |
+          ssh root@uat.bankoflemons.ru "rm -f /root/bank-of-lemons-web.tar"
+
+      # 5. Transfer Docker image to server.
+      - name: Transfer Docker image to server
+        uses: appleboy/scp-action@master
+        with:
+          host: uat.bankoflemons.ru
+          username: root
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          source: bank-of-lemons-web.tar
+          target: /root/
+
+      # 6. Verify the file on server.
+      - name: Verify Docker image file on server
+        run: |
+          ssh root@uat.bankoflemons.ru "ls -lh /root/bank-of-lemons-web.tar"
+
+      # 7. Load Docker image on server.
+      - name: Load Docker image on server
+        run: |
+          ssh root@uat.bankoflemons.ru "docker load -i /root/bank-of-lemons-web.tar"
+
+      - name: Stop and remove existing container
+        run: |
+          ssh root@uat.bankoflemons.ru "docker stop bank-of-lemons-web || true"
+          ssh root@uat.bankoflemons.ru "docker rm bank-of-lemons-web || true"
+
+      # 8. Run Docker container on server.
+      - name: Run Docker container on server
+        run: |
+          ssh root@uat.bankoflemons.ru "docker run -d -p 80:80 -p 443:443 --name bank-of-lemons-web --network my_network bank-of-lemons-web:latest"
