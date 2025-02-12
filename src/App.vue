@@ -1,11 +1,21 @@
 <script setup lang="ts">
 import { RouterView } from 'vue-router';
-import { computed } from 'vue';
-import { ref } from 'vue';
+import { onMounted } from 'vue'
 import Menu from './components/Menu.vue';
-import Cookies from 'js-cookie';
+import { useAuthStore } from '@/stores/useAuthStore'
+import router from '@/router'
 
-const isAuth = ref(Cookies.get('token') !== undefined);
+const authStore = useAuthStore()
+
+onMounted(() => {
+  authStore.checkAuth()
+  if (authStore.token) {
+    router.push('/')
+  } else {
+    authStore.logout()
+    router.push('/login')
+  }
+});
 </script>
 
 <template>
