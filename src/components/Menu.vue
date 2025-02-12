@@ -1,5 +1,5 @@
 <template>
-  <div class="menu glass">
+  <div class="menu glass" v-if="isAuthenticated">
     <nav>
       <RouterLink to="/" class="nav-item" active-class="active">Заказы</RouterLink>
       <RouterLink to="/employers" class="nav-item" active-class="active">Сотрудники</RouterLink>
@@ -10,8 +10,11 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted } from 'vue'
+import { useAuthStore } from '@/stores/useAuthStore'
+import { storeToRefs } from 'pinia'
 
+const authStore = useAuthStore()
+const { isAuthenticated } = storeToRefs(authStore)
 </script>
 
 
