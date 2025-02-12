@@ -32,3 +32,5 @@ coverage
 certs
 certificate.crt
 certificate.key
+
+*.gz

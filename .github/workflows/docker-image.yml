@@ -29,6 +29,7 @@ jobs:
           docker build --build-arg CERTIFICATE_CRT="${{ secrets.CERTIFICATE_CRT }}" \
                        --build-arg CERTIFICATE_KEY="${{ secrets.CERTIFICATE_KEY }}" \
                        --build-arg CERTIFICATE_CA_CRT="${{ secrets.CERTIFICATE_CA_CRT }}" \
+                       --build-arg ENV="prod" \
                        -t bank-of-lemons-web:latest .
           docker save bank-of-lemons-web:latest > bank-of-lemons-web.tar
           echo "::set-output name=image::bank-of-lemons-web.tar"  # Используете set-output для передачи данных

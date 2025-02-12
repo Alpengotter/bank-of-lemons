@@ -156,7 +156,10 @@ const handleSubmit = async (employer: User | undefined) => {
     await props.updateWallet(employer.id, { lemons, diamonds, comment: commentValue.value });
     await refresh();
 
-    sendNotification(employer.email, parseInt(inputValue.value), lemons > 0 ? 'lemons' : 'diamonds', commentValue.value)
+    if (isNotify.value) {
+      sendNotification(employer.email, parseInt(inputValue.value), lemons > 0 ? 'lemons' : 'diamonds', commentValue.value)
+    }
+    
     inputValue.value = '';
     commentValue.value = ''
   } catch (error) {

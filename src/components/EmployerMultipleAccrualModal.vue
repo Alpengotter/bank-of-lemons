@@ -5,7 +5,10 @@
     </header>
     <WalletActions :currencies="currencies" :operations="operations" @submit="handleSubmit" />
     <div>
-      <div v-for="(employee, index) in selectedEmployersStore.selectedItems" :key="employee.id + '-' + index">
+      <div
+        v-for="(employee, index) in selectedEmployersStore.selectedItems"
+        :key="employee.id + '-' + index"
+      >
         <EmployerSimpleItem :employee="employee" />
       </div>
     </div>
@@ -13,52 +16,71 @@
 </template>
 
 <script setup lang="ts">
-import type { User } from '@/types/user';
-import { useSelectedUsersStore } from '@/stores/selectedUsersStore';
-import EmployerSimpleItem from './EmployerSimpleItem.vue';
-import WalletActions from './WalletActions.vue';
-import { useUserStore } from '@/stores/userStores';
+import type { User } from '@/types/user'
+import { useSelectedUsersStore } from '@/stores/selectedUsersStore'
+import EmployerSimpleItem from './EmployerSimpleItem.vue'
+import WalletActions from './WalletActions.vue'
+import { useUserStore } from '@/stores/userStores'
 
-const currencies = ['🍋', '💎'];
-const operations = ['+', '-'];
+const currencies = ['🍋', '💎']
+const operations = ['+', '-']
 
-const selectedEmployersStore = useSelectedUsersStore();
-const userStore = useUserStore();
+const selectedEmployersStore = useSelectedUsersStore()
+const userStore = useUserStore()
 
-const handleSubmit = async ({ currency, operation, value, comment }: { currency: string, operation: string, value: number, comment: string }) => {
-  currency = currency === '🍋' ? 'lemons' : 'diamonds';
-  const userIds = selectedEmployersStore.selectedItems.map((item: User) => item.id);
+const handleSubmit = async ({
+  currency,
+  operation,
+  value,
+  comment,
+  isNotify,
+}: {
+  currency: string
+  operation: string
+  value: number
+  comment: string
+  isNotify: boolean
+}) => {
+  currency = currency === '🍋' ? 'lemons' : 'diamonds'
+  const userIds = selectedEmployersStore.selectedItems.map((item: User) => item.id)
   try {
-    await userStore.multipleAccrual({ userIds, currency, count: value, comment });
+    await userStore.multipleAccrual({ userIds, currency, count: value, comment })
+    if (isNotify) {
+      let usersEmails: string[]  = [];
 
-    userIds.forEach((value) => {
-      const user = userStore.getUserById(value);
-      if (user) {
-        sendNotification(user.email, value, currency, comment)
-      }
-    })
-
+      userIds.forEach((value) => {
+        const user = userStore.getUserById(value)
+        if (user) {
+          usersEmails.push(user.email)
+        }
+      })
+      sendNotificationMultipleRecepients(usersEmails, value, currency, comment)
+    }
   } catch (e) {
-    console.log("🚀 ~ handleSubmit ~ e:", e)
+    console.log('🚀 ~ handleSubmit ~ e:', e)
   } finally {
-    props.close();
+    props.close()
   }
-};
+}
 
-const sendNotification = (email: string, count: number, currency: string, comment: string) => {
+const sendNotificationMultipleRecepients = (
+  emails: string[],
+  count: number,
+  currency: string,
+  comment: string,
+) => {
+  const emailsString = emails.join(',')
   const langCurrency = currency === 'lemons' ? 'лимонов' : 'алмазов'
-  const subject = 'Магазин мерча Зарплаты.ру';
+  const subject = 'Магазин мерча Зарплаты.ру'
   const body = `Привет!%0D%0AМы начислили тебе ${count} ${langCurrency} "${comment}".%0D%0AПереходи в наш магазин мерча store.zarplata.ru и оформляй заказ. Вперед за покупками!`
-  const mailto = `
-            mailto:${email}?subject=${subject}&body=${body}
-        `;
-  window.location.href = mailto;
+  window.location.href = `
+            mailto:${emailsString}?subject=${subject}&body=${body}
+        `
 }
 
 const props = defineProps<{
-  close: () => void;
-}>();
-
+  close: () => void
+}>()
 </script>
 
 <style scoped>
@@ -125,7 +147,7 @@ footer {
   flex-direction: row;
   justify-content: center;
   margin-bottom: 1rem;
-  justify-content: center
+  justify-content: center;
 }
 
 .history {
@@ -187,7 +209,7 @@ footer {
 .input {
   border-radius: 99px;
   border: none;
-  background-color: rgba(0, 0, 0, .1);
+  background-color: rgba(0, 0, 0, 0.1);
   padding: 8px 16px;
   font-size: 14px;
 }
@@ -209,7 +231,7 @@ footer {
 }
 
 .remove {
-  color: #FF746C;
+  color: #ff746c;
 }
 
 .button-title {
