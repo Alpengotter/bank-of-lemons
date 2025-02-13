@@ -1,5 +1,7 @@
 <template>
-  <div class="bar-chart-container">
+  <div class="bar-chart-container" :class="{
+    'full': props.range[1] > 6
+  }">
     <Bar id="my-bar-chart" :data="chartData" :options="chartOptions"/>
   </div>
 </template>
@@ -24,14 +26,13 @@ const currentMounth = new Date().getMonth();
 
 const props = defineProps<{
   data: number[];
+  range: number[];
 }>()
 
-const startMounth = new Date().getMonth() >= 6 ? 6 : 0;
-const endMounth = new Date().getMonth() <= 6 ? 6 : 11;
 
 // Данные для графика
 const chartData = {
-  labels: ['Янв', 'Фев', 'Март', 'Апр', 'Май', 'Июнь', 'Июль', 'Авг', 'Сент', 'Окт', 'Нояб', 'Дек'].splice(startMounth, endMounth),
+  labels: ['Янв', 'Фев', 'Март', 'Апр', 'Май', 'Июнь', 'Июль', 'Авг', 'Сент', 'Окт', 'Нояб', 'Дек'].splice(props.range[0], props.range[1]),
   datasets: [
     {
       data: props.data || [0,0,0,0,0,0],
@@ -101,5 +102,10 @@ const chartOptions: ChartOptions = {
 <style scoped>
 .bar-chart-container {
   max-width: 330px;
+}
+
+.full {
+  max-width: 600px;
+  width: 100%;
 }
 </style>
