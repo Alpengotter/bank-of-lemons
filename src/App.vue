@@ -1,11 +1,23 @@
 <script setup lang="ts">
 import { RouterView } from 'vue-router';
-import { onMounted } from 'vue'
+import { onMounted, ref } from 'vue'
 import Menu from './components/Menu.vue';
 import { useAuthStore } from '@/stores/useAuthStore'
 import router from '@/router'
 
 const authStore = useAuthStore()
+
+const showProfileMenu = ref(false)
+
+const toggleShowProfileMenu = () => {
+  showProfileMenu.value = !showProfileMenu.value;
+}
+
+const logout = () => {
+  authStore.logout()
+  toggleShowProfileMenu()
+  router.push('/login')
+}
 
 onMounted(() => {
   authStore.checkAuth()
@@ -29,7 +41,16 @@ onMounted(() => {
       <div class="header__menu">
         <Menu />
         <!-- <div class="header__profile glass">🔔</div> -->
-        <div class="header__profile glass">🧑‍💻</div>
+        <div class="header__profile glass" @click="toggleShowProfileMenu">
+          <img style="width: 20px; height: 20px;"  src="@/assets/technologist.png" alt="technologist" />
+        </div>
+        <div class="header-profile-menu" v-if="showProfileMenu">
+          <div class="logout" @click="logout">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M5 21C4.45 21 3.97933 20.8043 3.588 20.413C3.19667 20.0217 3.00067 19.5507 3 19V5C3 4.45 3.196 3.97933 3.588 3.588C3.98 3.19667 4.45067 3.00067 5 3H12V5H5V19H12V21H5ZM16 17L14.625 15.55L17.175 13H9V11H17.175L14.625 8.45L16 7L21 12L16 17Z" fill="#5A5A5A"/>
+            </svg>
+          </div>
+        </div>
       </div>
     </header>
 
@@ -102,6 +123,7 @@ footer {
   align-items: center;
   justify-content: center;
   gap: 8px;
+  position: relative;
 }
 
 .header__profile {
@@ -173,5 +195,23 @@ nav a:first-of-type {
     padding: 1rem 0;
     margin-top: 1rem;
   }
+}
+
+.header-profile-menu {
+  position: absolute;
+  right: 0;
+  top: 60px;
+}
+
+.logout {
+  width: 50px;
+  height: 50px;
+  background-color: #fff;
+  border-radius: 99px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  cursor: pointer;
 }
 </style>

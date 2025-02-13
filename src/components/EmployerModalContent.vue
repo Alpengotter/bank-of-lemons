@@ -9,14 +9,14 @@
     </header>
     <main>
       <div class="wallet">
-        <p>🍋 <span>{{ employer?.lemons }}</span>
+        <p><img src="@/assets/lemon.png" alt="lemon" width="30" height="30" style="margin-right: 4px"/><span>{{ employer?.lemons }}</span>
           <span v-if="activeCurrencyIndex === 0 && inputValue.length" class="change-value"
             :class="{ 'add': activeOperationIndex === 0, 'remove': activeOperationIndex === 1 }">
             <span v-if="activeOperationIndex === 0">+</span>
             <span v-else>-</span>{{ inputValue }}
           </span>
         </p>
-        <p>💎 <span>{{ employer?.diamonds }}</span>
+        <p><img src="@/assets/gem.png" alt="gem" width="30" height="30" style="margin-right: 4px"/> <span>{{ employer?.diamonds }}</span>
           <span v-if="activeCurrencyIndex === 1 && inputValue.length" class="change-value"
             :class="{ 'add': activeOperationIndex === 0, 'remove': activeOperationIndex === 1 }">
             <span v-if="activeOperationIndex === 0">+</span>
@@ -159,7 +159,7 @@ const handleSubmit = async (employer: User | undefined) => {
     if (isNotify.value) {
       sendNotification(employer.email, parseInt(inputValue.value), lemons > 0 ? 'lemons' : 'diamonds', commentValue.value)
     }
-    
+
     inputValue.value = '';
     commentValue.value = ''
   } catch (error) {
