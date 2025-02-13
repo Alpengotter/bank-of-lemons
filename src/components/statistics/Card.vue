@@ -2,7 +2,7 @@
 import type { StatisticItem } from '@/types/statistic-item'
 // @ts-ignore
 import ArrowIcon from '@/assets/icons/arrow.svg?component'
-import Chart from '@/components/statistics/Chart.vue'
+import BarChartComponent from '@/components/statistics/BarChartComponent.vue'
 
 const currentYear = new Date().getFullYear();
 
@@ -24,6 +24,7 @@ defineProps<{
       <p class="summary-year">за {{ currentYear }}</p>
     </div>
     <div class="chart">
+      <BarChartComponent :data="data.summary.byMounths"/>
     </div>
   </div>
 </template>
@@ -83,5 +84,9 @@ defineProps<{
   font-size: 14px;
 
   color: #939393;
+}
+
+.chart {
+  margin-top: 40px;
 }
 </style>
