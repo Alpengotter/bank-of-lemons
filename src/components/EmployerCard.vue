@@ -17,14 +17,14 @@
 
     <div class="wallet" @click="showUserInfo(user)">
       <div class="wallet-lemons">
-        <p class="wallet-text">{{ user.lemons }} 🍋</p>
+        <p class="wallet-text">{{ user.lemons }} <img src="@/assets/lemon.png" alt="lemon" width="18" height="18" style="margin-left: 4px"/></p>
 
       </div>
 
       <div class="divider" />
 
       <div class="wallet-diamonds">
-        <p class="wallet-text">{{ user.diamonds }} 💎</p>
+        <p class="wallet-text">{{ user.diamonds }} <img src="@/assets/gem.png" alt="gem" width="18" height="18" style="margin-left: 4px"/></p>
       </div>
     </div>
   </div>
@@ -121,6 +121,9 @@ const toggleSelection = (event: Event) => {
   line-height: 22px;
 
   color: var(--color-text);
+
+  display: flex;
+  align-items: center;
 }
 
 .divider {

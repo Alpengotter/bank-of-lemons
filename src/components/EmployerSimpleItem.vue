@@ -8,14 +8,14 @@
 
     <div class="wallet">
       <div class="wallet-lemons">
-        <p class="wallet-text">{{ employee.lemons }} 🍋</p>
+        <p class="wallet-text">{{ employee.lemons }} <img src="@/assets/lemon.png" alt="lemon" width="18" height="18" style="margin-left: 4px"/></p>
 
       </div>
 
       <div class="divider" />
 
       <div class="wallet-diamonds">
-        <p class="wallet-text">{{ employee.diamonds }} 💎</p>
+        <p class="wallet-text">{{ employee.diamonds }} <img src="@/assets/gem.png" alt="gem" width="18" height="18" style="margin-left: 4px"/></p>
       </div>
     </div>
   </div>
@@ -83,6 +83,9 @@ const props = defineProps<{
   line-height: 22px;
 
   color: var(--color-text);
+
+  display: flex;
+  align-items: center;
 }
 
 .divider {
