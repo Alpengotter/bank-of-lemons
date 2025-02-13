@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import Card from '@/components/statistics/Card.vue'
 import type { StatisticItem } from '@/types/statistic-item'
+import { useStatisticsStores } from '@/stores/statisticsStores'
+import { onMounted } from 'vue'
 
 const data: StatisticItem[] = [
   {
@@ -52,6 +54,16 @@ const data: StatisticItem[] = [
     },
   },
 ]
+
+const useStatistics = useStatisticsStores();
+
+onMounted(() => {
+  useStatistics.fetchStatistics()
+})
+
+const startMounth = new Date().getMonth() >= 6 ? 6 : 0;
+const endMounth = new Date().getMonth() <= 6 ? 6 : 11;
+
 </script>
 
 <template>
@@ -61,7 +73,7 @@ const data: StatisticItem[] = [
     </div>
   </header>
   <main>
-    <Card v-for="item in data" :key="item.id" :data="item"/>
+    <Card v-for="item in data" :key="item.id" :data="item" :range="[startMounth, endMounth]" />
   </main>
 </template>
 
