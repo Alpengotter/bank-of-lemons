@@ -95,7 +95,6 @@ const acceptOrder = async () => {
   console.log('acceptOrder');
   try {
     await ordersStore.changeStatus(props.order.id, 'ACCEPTED');
-    updateEmployerWallet();
   } catch (error) {
     console.error(error);
   }
@@ -109,20 +108,6 @@ const declineOrder = async () => {
     console.error(error);
   }
 };
-
-const updateEmployerWallet = async () => {
-  if (!props.employer) return;
-  try {
-    await userStore.updateWallet(props.employer?.id, {
-      lemons: props.employer.lemons - parseInt(props.order.total, 10),
-      diamonds: props.employer.diamonds,
-      comment: 'Подтверждение заказа'
-    });
-  } catch (error) {
-    console.error('Error updating employer wallet:', error);
-  }
-};
-
 
 const props = defineProps<{
   order: Order;
