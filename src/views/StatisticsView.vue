@@ -3,6 +3,55 @@ import Card from '@/components/statistics/Card.vue'
 import type { StatisticItem } from '@/types/statistic-item'
 import { useStatisticsStores } from '@/stores/statisticsStores'
 import { onMounted } from 'vue'
+import { StatisticsTypes } from '@/constants/statistics'
+import type { StatisticsSummaryResponse } from '@/types/statistic'
+
+const statisticsStore = useStatisticsStores();
+const currentYear = new Date().getFullYear();
+let dataSet;
+
+onMounted(async () => {
+  try {
+    const statisticTypes = [
+      StatisticsTypes.NEW_ORDER,
+      StatisticsTypes.ACCEPT_ORDER,
+      StatisticsTypes.DECLINE_ORDER,
+      StatisticsTypes.REWARD,
+      StatisticsTypes.DEACTIVATE,
+      StatisticsTypes.NEW_EMPLOYER,
+    ];
+
+    // Выполняем все запросы параллельно
+    await Promise.all(
+      statisticTypes.map(async (type) => {
+        try {
+          await statisticsStore.fetchStatisticsSummary(type, currentYear);
+        } catch (error) {
+          console.error(`Ошибка при загрузке данных для типа ${type}:`, error);
+        }
+      })
+    );
+
+    // Создаем dataSet после завершения всех запросов
+    dataSet = createDataSet(statisticsStore.statisticsSummary);
+
+    console.log(dataSet);
+  } catch (error) {
+    console.error("Произошла ошибка при загрузке статистики:", error);
+  }
+});
+
+// Функция для создания dataSet
+function createDataSet(summaryData: StatisticsSummaryResponse[]) {
+  return summaryData?.map((item, index) => ({
+    id: index,
+    title: item.type,
+    summary: {
+      total: item.total,
+      byMonths: item.totalMonth,
+    },
+  }));
+}
 
 const data: StatisticItem[] = [
   {
