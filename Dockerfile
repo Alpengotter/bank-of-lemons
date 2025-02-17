@@ -7,11 +7,10 @@ COPY package.json yarn.lock ./
 RUN yarn install
 
 RUN yarn cache clean
-
-COPY . .
-
 RUN rm -rf dist/
 RUN npx tsc --build --clean
+
+COPY . .
 
 RUN yarn build
 
