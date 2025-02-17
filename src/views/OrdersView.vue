@@ -15,7 +15,10 @@
     <div class="actions-wrapper">
       <div class="actions">
         <!-- Show history modal -->
-        <Button appearance="secondary" @click="toggleHistoryModal">📅 История</Button>
+        <Button appearance="secondary" @click="toggleHistoryModal">
+          <img style="width: 14px; height: 14px; margin-right: 8px" src="@/assets/calendar.png" alt="calendar" />
+          История
+        </Button>
       </div>
     </div>
     <!-- Orders List -->

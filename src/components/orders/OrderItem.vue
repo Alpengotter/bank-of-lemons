@@ -19,18 +19,18 @@
       <div class="product" v-for="preparedOrderItem in preparedOrderItems" :key="preparedOrderItem.title">
         <p class="secondary-text product-title">{{ preparedOrderItem.title }}</p>
         <p class="secondary-text product-count">{{ preparedOrderItem.count }}</p>
-        <p class="secondary-text product-total">{{ preparedOrderItem.total }}&nbsp;🍋</p>
+        <p class="secondary-text product-total">{{ preparedOrderItem.total }}&nbsp;<img src="@/assets/lemon.png" alt="lemon" width="18" height="18"/></p>
       </div>
     </div>
     <!-- order summary -->
     <div class="summary">
       <div class="summary-item">
         <p class="summary-text">Итого</p>
-        <p class="summary-text" style="font-weight: normal;">{{ order.total }} 🍋</p>
+        <p class="summary-text" style="font-weight: normal;">{{ order.total }} <img src="@/assets/lemon.png" alt="lemon" width="18" height="18"/></p>
       </div>
       <div class="summary-item">
         <p class="summary-text">У сотрудника</p>
-        <p class="summary-text" style="font-weight: normal;">{{ employer.lemons }} 🍋</p>
+        <p class="summary-text" style="font-weight: normal;">{{ employer.lemons }} <img src="@/assets/lemon.png" alt="lemon" width="18" height="18"/></p>
       </div>
     </div>
     <!-- actions -->
@@ -95,7 +95,6 @@ const acceptOrder = async () => {
   console.log('acceptOrder');
   try {
     await ordersStore.changeStatus(props.order.id, 'ACCEPTED');
-    updateEmployerWallet();
   } catch (error) {
     console.error(error);
   }
@@ -109,20 +108,6 @@ const declineOrder = async () => {
     console.error(error);
   }
 };
-
-const updateEmployerWallet = async () => {
-  if (!props.employer) return;
-  try {
-    await userStore.updateWallet(props.employer?.id, {
-      lemons: props.employer.lemons - parseInt(props.order.total, 10),
-      diamonds: props.employer.diamonds,
-      comment: 'Подтверждение заказа'
-    });
-  } catch (error) {
-    console.error('Error updating employer wallet:', error);
-  }
-};
-
 
 const props = defineProps<{
   order: Order;
