@@ -9,9 +9,6 @@
     "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"]
-    },
-    "outDir": "./dist/app",
-    "rootDir": "./src/app",
-    "declaration": true
+    }
   }
 }

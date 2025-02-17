@@ -10,6 +10,9 @@ RUN yarn cache clean
 
 COPY . .
 
+RUN rm -rf dist/
+RUN npx tsc --build --clean
+
 RUN yarn build
 
 FROM nginx:alpine

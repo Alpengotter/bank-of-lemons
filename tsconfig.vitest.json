@@ -6,9 +6,6 @@
     "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.vitest.tsbuildinfo",
 
     "lib": [],
-    "types": ["node", "jsdom"],
-    "outDir": "./dist/vitest",
-    "rootDir": "./tests",
-    "declaration": true
+    "types": ["node", "jsdom"]
   }
 }
