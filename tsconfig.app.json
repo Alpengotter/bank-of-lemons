@@ -11,6 +11,7 @@
       "@/*": ["./src/*"]
     },
     "outDir": "./dist/app",
-    "rootDir": "./src/app"
+    "rootDir": "./src/app",
+    "declaration": true
   }
 }

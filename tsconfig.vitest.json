@@ -8,6 +8,7 @@
     "lib": [],
     "types": ["node", "jsdom"],
     "outDir": "./dist/vitest",
-    "rootDir": "./tests"
+    "rootDir": "./tests",
+    "declaration": true
   }
 }
