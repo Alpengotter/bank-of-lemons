@@ -19,12 +19,21 @@
 </template>
 
 <script setup lang="ts">
+import type { VNode } from 'vue'
+
+interface ModalSlots {
+  content?: () => VNode;
+}
 
 interface Props {
   show: boolean;
 }
 
-defineProps<Props>();
+withDefaults(defineProps<Props>(), {
+  show: false,
+});
+
+defineSlots<ModalSlots>();
 
 const emit = defineEmits<{
   (e: 'close-modal'): void
