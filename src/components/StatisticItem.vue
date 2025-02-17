@@ -2,9 +2,15 @@
   <div class="statistic-block">
     <div class="statistic-total">
       <div class="statistic-icon">
-        <span v-if="icon === 'employer'" width="18" height="18">👥</span>
-        <span v-if="icon === 'diamonds'" width="18" height="18">💎</span>
-        <span v-if="icon === 'lemons'" width="18" height="18">🍋</span>
+        <div v-if="icon === 'employer'">
+          <img src="@/assets/busts.png" alt="busts" width="18" height="18"/>
+        </div>
+        <div v-if="icon === 'diamonds'">
+          <img src="@/assets/gem.png" alt="gem" width="18" height="18"/>
+        </div>
+        <div v-if="icon === 'lemons'">
+          <img src="@/assets/lemon.png" alt="lemon" width="18" height="18"/>
+        </div>
       </div>
       <div>
         <Preloader :width="20" v-if="!count" />
@@ -43,6 +49,12 @@ const props = defineProps<{
   height: 30px;
 
   margin-right: 4px;
+}
+
+.statistic-icon div {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .statistic-count {

@@ -21,6 +21,8 @@ coverage
 .vscode/*
 !.vscode/extensions.json
 .idea
+.yarn
+.vscode
 *.suo
 *.ntvs*
 *.njsproj
@@ -32,3 +34,5 @@ coverage
 certs
 certificate.crt
 certificate.key
+
+*.gz

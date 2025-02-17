@@ -20,11 +20,11 @@ export default defineConfig(({ command, mode }) => {
       ...(isDevelopment && {
         proxy: {
           '/api/v1': {
-            target: 'https://bankoflemons.ru',
+            target: 'https://uat.bankoflemons.ru',
             changeOrigin: true,
             secure: false,
             headers: {
-              Origin: 'https://bankoflemons.ru',
+              Origin: 'https://uat.bankoflemons.ru',
             },
             credentials: 'include',
           },

@@ -2,21 +2,24 @@ import Cookies from 'js-cookie'
 import axios from './axios'
 import router from '@/router'
 import { isAxiosError } from 'axios'
+import { useAuthStore } from '@/stores/useAuthStore'
 
 export const makeRequest = async <T>(
   endpoint: string,
   method: 'get' | 'post' | 'put',
   data?: unknown,
 ): Promise<T> => {
-  const accessToken = Cookies.get('token')
+  const authStore = useAuthStore();
+  authStore.checkAuth();
 
-  if (!accessToken) {
-    throw new Error('No access token available')
+  if (!authStore.token) {
+    authStore.logout();
+    router.push('/login')
   }
 
   const headers = {
     'Content-Type': 'application/json',
-    Authorization: `Bearer ${accessToken}`,
+    Authorization: `Bearer ${authStore.token}`,
   }
 
   try {
@@ -36,7 +39,7 @@ export const makeRequest = async <T>(
       error.response.data === 'Invalid token'
     ) {
       Cookies.remove('token')
-      router.push('/login')
+      await router.push('/login')
     }
     throw error
   }

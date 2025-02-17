@@ -13,6 +13,6 @@
   ],
   "compilerOptions": {
     "module": "NodeNext",
-    "allowSyntheticDefaultImports": true
-  }
+    "allowSyntheticDefaultImports": true,
+  },
 }

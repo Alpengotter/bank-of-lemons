@@ -66,6 +66,7 @@ const handleSubmit = () => {
     operation: props.operations[activeOperationIndex.value],
     value: inputValue.value,
     comment: commentValue.value,
+    isNotify: isNotify.value,
   });
   inputValue.value = null;
 };

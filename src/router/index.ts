@@ -5,6 +5,7 @@ import StatisticsView from '@/views/StatisticsView.vue'
 import ReportsView from '@/views/ReportsView.vue'
 import OrdersView from '@/views/OrdersView.vue'
 import Cookies from 'js-cookie'
+import { useAuthStore } from '@/stores/useAuthStore'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -42,15 +43,12 @@ const router = createRouter({
   ],
 })
 
-function isAuthenticated() {
-  return !!Cookies.get('token')
-}
-
 router.beforeEach((to, from, next) => {
   const userRoles = ['ADMIN']
+  const authStore = useAuthStore()
 
   if (to.matched.some((record) => record.meta.requiresAuth)) {
-    if (!isAuthenticated()) {
+    if (!authStore.isAuthenticated) {
       return next({ name: 'login' })
     }
 
