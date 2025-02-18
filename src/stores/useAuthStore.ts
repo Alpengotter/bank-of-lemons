@@ -52,8 +52,10 @@ export const useAuthStore = defineStore('auth', {
           if (!data.accessToken) {
             throw new Error('Invalid token received');
           }
-          this.token = data.accessToken; // Сохраняем токен в состоянии
-          Cookies.set('token', data.accessToken); // Сохраняем токен в cookies
+          this.token = data.accessToken;
+          Cookies.set('token', data.accessToken, {
+            expires: 7
+          });
           break;
         }
         case 401:
