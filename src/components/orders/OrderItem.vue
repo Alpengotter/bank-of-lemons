@@ -43,7 +43,7 @@
                 fill="#0EAE09" />
         </svg>
       </div>
-      <div @click="declineOrder">
+      <div @click="toggleDeclineModal">
         <svg width="33" height="32" viewBox="0 0 33 32" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path
             d="M16.5 4C9.81429 4 4.5 9.31429 4.5 16C4.5 22.6857 9.81429 28 16.5 28C23.1857 28 28.5 22.6857 28.5 16C28.5 9.31429 23.1857 4 16.5 4ZM21.1286 22L16.5 17.3714L11.8714 22L10.5 20.6286L15.1286 16L10.5 11.3714L11.8714 10L16.5 14.6286L21.1286 10L22.5 11.3714L17.8714 16L22.5 20.6286L21.1286 22Z"
@@ -96,16 +96,7 @@ const acceptOrder = async () => {
   console.log('acceptOrder');
   try {
     await ordersStore.changeStatus(props.order.id, 'ACCEPTED');
-    updateEmployerWallet();
-  } catch (error) {
-    console.error(error);
-  }
-};
-
-const declineOrder = async () => {
-  console.log('declineOrder');
-  try {
-    await ordersStore.changeStatus(props.order.id, 'REJECTED');
+    await updateEmployerWallet();
   } catch (error) {
     console.error(error);
   }
@@ -128,6 +119,7 @@ const updateEmployerWallet = async () => {
 const props = defineProps<{
   order: Order;
   employer: User | undefined;
+  toggleDeclineModal: () => void;
 }>();
 </script>
 
