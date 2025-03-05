@@ -29,7 +29,6 @@ body {
   width: 6px;
   background-color: #fff;
   opacity: 0;
-  background: transparent;
 }
 
 ::-webkit-scrollbar-thumb {

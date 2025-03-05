@@ -8,19 +8,20 @@ export const makeRequest = async <T>(
   endpoint: string,
   method: 'get' | 'post' | 'put',
   data?: unknown,
+  responseType?: 'json' | 'blob' | 'arraybuffer' | 'document' | 'text' | 'stream',
 ): Promise<T> => {
   const authStore = useAuthStore();
   authStore.checkAuth();
 
   if (!authStore.token) {
     authStore.logout();
-    router.push('/login')
+    router.push('/login');
   }
 
   const headers = {
     'Content-Type': 'application/json',
     Authorization: `Bearer ${authStore.token}`,
-  }
+  };
 
   try {
     const response = await axios({
@@ -28,9 +29,10 @@ export const makeRequest = async <T>(
       method,
       headers,
       ...(method !== 'get' && { data }),
-    })
+      responseType,
+    });
 
-    return response.data
+    return response.data;
   } catch (error) {
     if (
       isAxiosError(error) &&
@@ -38,9 +40,9 @@ export const makeRequest = async <T>(
       error.response.status === 500 &&
       error.response.data === 'Invalid token'
     ) {
-      Cookies.remove('token')
-      await router.push('/login')
+      Cookies.remove('token');
+      await router.push('/login');
     }
-    throw error
+    throw error;
   }
-}
+};

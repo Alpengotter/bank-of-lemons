@@ -85,3 +85,9 @@ body {
 
   color: var(--color-secondary-text);
 }
+
+.dp__theme_light {
+  --dp-primary-color: var(--vt-c-primary) !important;
+  --dp-primary-text-color: var(--vt-c-black) !important;
+  --dp-secondary-color: var(--vt-c-black) !important;
+}
