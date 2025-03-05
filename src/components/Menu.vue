@@ -38,4 +38,8 @@ nav {
   font-size: 16px;
   font-weight: 600;
 }
+
+.active {
+  background-color: var(--vt-c-primary);
+}
 </style>

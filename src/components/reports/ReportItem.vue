@@ -1,13 +1,17 @@
 <script setup lang="ts">
 //@ts-ignore
 import DownloadIcon from '@/assets/icons/download.svg?component';
+import { ref } from 'vue'
 
 const currentYear = new Date().getFullYear();
 const availableYears = [currentYear, new Date().getFullYear() - 1, new Date().getFullYear() - 2];
 
+const selectedYear = ref(currentYear)
+
 const props = defineProps<{
   title: string,
   canSelectYear: boolean,
+  onDownload: (value?: number) => void,
 }>();
 </script>
 
@@ -22,15 +26,15 @@ const props = defineProps<{
           {{ title }}
         </p>
       </div>
-      <div class="year-picker-container">
-        <select name="years" id="year-select" class="year-picker">
+      <div v-if="canSelectYear" class="year-picker-container">
+        <select name="years" id="year-select" class="year-picker" v-model="selectedYear">
           <option v-for="year in availableYears" :value="year">{{ year }}</option>
         </select>
       </div>
     </div>
-    <div class="report-item__download glass">
+    <button class="report-item__download glass" @click="() => onDownload(selectedYear)">
       <DownloadIcon />
-    </div>
+    </button>
   </div>
 </template>
 
