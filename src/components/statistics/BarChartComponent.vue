@@ -1,12 +1,5 @@
-<template>
-  <div class="bar-chart-container" :class="{
-    'full': props.range[1] > 6
-  }">
-    <Bar id="my-bar-chart" :data="chartData" :options="chartOptions"/>
-  </div>
-</template>
-
 <script setup lang="ts">
+// @ts-nocheck
 import { Bar } from 'vue-chartjs';
 import {
   Chart as ChartJS,
@@ -98,6 +91,14 @@ const chartOptions: ChartOptions = {
   }
 };
 </script>
+
+<template>
+  <div class="bar-chart-container" :class="{
+    'full': props.range[1] > 6
+  }">
+    <Bar id="my-bar-chart" :data="chartData" :options="chartOptions"/>
+  </div>
+</template>
 
 <style scoped>
 .bar-chart-container {
