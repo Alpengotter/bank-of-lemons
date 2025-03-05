@@ -18,11 +18,11 @@ const downloadFile = async (url: string, filename: string, year?: number) => {
   }
 }
 
-const downloadEmployeeResources = () => downloadFile('/reports/employee-resources', 'Отчет по количеству лимонов и алмазов в разрезе по сотрудникам.xlsx');
+const downloadEmployeeResources = () => downloadFile('reports/employee-resources', 'Отчет по количеству лимонов и алмазов в разрезе по сотрудникам.xlsx');
 
-const downloadOrders = (year?: number) => downloadFile('/reports/orders', 'Отчет по обработанных заявок по месяцам за выбранный год.xlsx', year);
+const downloadOrders = (year?: number) => downloadFile('reports/orders', 'Отчет по обработанных заявок по месяцам за выбранный год.xlsx', year);
 
-const downloadResourceTransactions = (year?: number) => downloadFile('/reports/resource-transactions', 'Отчет по количеству потраченных/начисленных лимонов/алмазов по месяцам за выбранный год.xlsx', year);
+const downloadResourceTransactions = (year?: number) => downloadFile('reports/resource-transactions', 'Отчет по количеству потраченных/начисленных лимонов/алмазов по месяцам за выбранный год.xlsx', year);
 </script>
 
 <template>
