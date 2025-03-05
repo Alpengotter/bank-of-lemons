@@ -4,7 +4,6 @@ import EmployersView from '@/views/EmployersView.vue'
 import StatisticsView from '@/views/StatisticsView.vue'
 import ReportsView from '@/views/ReportsView.vue'
 import OrdersView from '@/views/OrdersView.vue'
-import Cookies from 'js-cookie'
 import { useAuthStore } from '@/stores/useAuthStore'
 
 const router = createRouter({
@@ -38,7 +37,7 @@ const router = createRouter({
       path: '/reports',
       name: 'reports',
       component: ReportsView,
-      meta: { requiresAuth: true, roles: ['MASTER'] },
+      meta: { requiresAuth: true, roles: ['ADMIN'] },
     },
   ],
 })

@@ -34,8 +34,6 @@ onMounted(async () => {
 
     // Создаем dataSet после завершения всех запросов
     dataSet = createDataSet(statisticsStore.statisticsSummary);
-
-    console.log(dataSet);
   } catch (error) {
     console.error("Произошла ошибка при загрузке статистики:", error);
   }
