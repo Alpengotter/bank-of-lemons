@@ -3,7 +3,7 @@ export interface Statistic {
 }
 
 export interface StatisticsSummaryResponse {
-  type?: string;
+  type: string;
   total: number;
-  totalMonth: number[];
+  totalMounth: number[];
 }
