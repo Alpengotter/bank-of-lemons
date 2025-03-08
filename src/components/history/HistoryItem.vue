@@ -5,7 +5,12 @@
       <p class="user-email secondary-text">{{ employer.email }}</p>
     </div>
     <p class="history-comment secondary-text">{{ historyItem.comment }}</p>
-    <p class="history-sum primary-text">{{ historyItem.value }} {{ currencyIcon }}</p>
+    <p class="history-sum primary-text" v-if="props.historyItem.currency === 'lemons'">
+      {{ historyItem.value }} <img src="@/assets/lemon.png" alt="lemon" width="18" height="18"/>
+    </p>
+    <p class="history-sum primary-text" v-if="props.historyItem.currency === 'diamonds'">
+      {{ historyItem.value }} <img src="@/assets/gem.png" alt="lemon" width="18" height="18"/>
+    </p>
   </div>
 </template>
 <script setup lang="ts">
@@ -14,13 +19,11 @@ import type { HistoryItem } from '@/types/historyItem';
 import type { User } from '@/types/user';
 import { onMounted, ref } from 'vue';
 
-const currencyIcon = ref<string>('🍋')
 const userStore = useUserStore();
 const employer = ref<User>();
 
 onMounted(async () => {
   employer.value = props.employer
-  currencyIcon.value = props.historyItem.currency === 'lemons' ? '🍋' : '💎'
   employer.value = userStore.getUserById(props.historyItem.userId) || undefined;
 })
 
@@ -34,6 +37,15 @@ const props = defineProps<{
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 10px 0;
+  padding: 10px 10px 10px 0;
+}
+
+.history-sum {
+  display: flex;
+  align-items: center;
+}
+
+.history-sum img {
+  margin-left: 8px;
 }
 </style>
