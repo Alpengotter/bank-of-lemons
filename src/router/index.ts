@@ -31,7 +31,7 @@ const router = createRouter({
       path: '/statistics',
       name: 'statistics',
       component: StatisticsView,
-      meta: { requiresAuth: true, roles: ['MASTER'] },
+      meta: { requiresAuth: true, roles: ['ADMIN'] },
     },
     {
       path: '/reports',
