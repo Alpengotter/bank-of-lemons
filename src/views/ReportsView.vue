@@ -20,7 +20,7 @@ const downloadFile = async (url: string, filename: string, year?: number) => {
 
 const downloadEmployeeResources = () => downloadFile('reports/employee-resources', 'Отчет по количеству лимонов и алмазов в разрезе по сотрудникам.xlsx');
 
-const downloadOrders = (year?: number) => downloadFile('reports/orders', 'Отчет по обработанных заявок по месяцам за выбранный год.xlsx', year);
+const downloadOrders = (year?: number) => downloadFile('reports/orders', 'Отчет по обработанным заявкам по месяцам за выбранный год.xlsx', year);
 
 const downloadResourceTransactions = (year?: number) => downloadFile('reports/resource-transactions', 'Отчет по количеству потраченных/начисленных лимонов/алмазов по месяцам за выбранный год.xlsx', year);
 </script>
@@ -33,7 +33,7 @@ const downloadResourceTransactions = (year?: number) => downloadFile('reports/re
   </header>
   <main>
     <ReportItem title="Отчет по количеству лимонов и алмазов в разрезе по сотрудникам" :can-select-year="false" :on-download="downloadEmployeeResources"/>
-    <ReportItem title="Отчет по обработанных заявок по месяцам за выбранный год" :can-select-year="true" :on-download="downloadOrders" />
+    <ReportItem title="Отчет по обработанным заявкам по месяцам за выбранный год" :can-select-year="true" :on-download="downloadOrders" />
     <ReportItem title="Отчет по количеству потраченных/начисленных лимонов/алмазов по месяцам за выбранный год" :can-select-year="true" :on-download="downloadResourceTransactions" />
   </main>
 </template>
