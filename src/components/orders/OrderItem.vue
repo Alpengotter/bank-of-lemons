@@ -13,7 +13,7 @@
         <p class="email secondary-text">{{ employer.email }}</p>
       </div>
       <!-- order date -->
-      <p class="order-date secondary-text">{{ order.date }}</p>
+      <p class="order-date secondary-text">{{ formatDate(order.date) }}</p>
     </div>
     <!-- order info -->
     <div v-if="preparedOrderItems" class="products-list">
@@ -114,6 +114,21 @@ const updateEmployerWallet = async () => {
     console.error('Error updating employer wallet:', error);
   }
 };
+
+const formatDate = (isoDate: string): string => {
+  const [datePart] = isoDate.split('T');
+  const [yearStr, monthStr, dayStr] = datePart.split('-');
+
+  const year = parseInt(yearStr, 10);
+  const month = parseInt(monthStr, 10);
+  const day = parseInt(dayStr, 10);
+
+  const date = new Date(Date.UTC(year, month - 1, day));
+
+  const pad = (n: number): string => n < 10 ? `0${n}` : `${n}`;
+
+  return `${pad(date.getUTCDate())}.${pad(date.getUTCMonth() + 1)}.${date.getUTCFullYear()}`;
+}
 
 
 const props = defineProps<{

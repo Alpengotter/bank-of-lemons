@@ -85,7 +85,7 @@ const emit = defineEmits<{
 
         <div class="summary">
           <p class="summary-total">{{ fetchedData!.total }}</p>
-          <p class="summary-year">за {{ currentYear }}</p>
+          <p class="summary-year">за {{ selectedYear }}</p>
         </div>
         <div class="chart">
           <BarChartComponent :data="fetchedData!.totalMounth" :range="[0, 12]" />
