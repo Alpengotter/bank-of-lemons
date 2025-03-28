@@ -170,7 +170,7 @@ const handleSubmit = async (employer: User | undefined) => {
 const sendNotification = (email: string, count: number, currency: string, comment: string) => {
   const langCurrency = currency === 'lemons' ? 'лимонов' : 'алмазов'
   const subject = 'Магазин мерча Зарплаты.ру';
-  const body = `Привет!%0D%0AМы начислили тебе ${count} ${langCurrency} "${comment}".%0D%0AПереходи в наш магазин мерча store.zarplata.ru и оформляй заказ. Вперед за покупками!`
+  const body = `Привет!%0D%0AМы начислили тебе ${count} ${langCurrency} за ачивку "${comment}".%0D%0AПереходи в наш магазин мерча store.zarplata.ru и оформляй заказ. Вперед за покупками!`
   const mailto = `
             mailto:${email}?subject=${subject}&body=${body}
         `;
