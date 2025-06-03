@@ -40,7 +40,6 @@ onMounted(() => {
 
       <div class="header__menu">
         <Menu />
-        <!-- <div class="header__profile glass">🔔</div> -->
         <div class="header__profile glass" @click="toggleShowProfileMenu">
           <img style="width: 20px; height: 20px;"  src="@/assets/technologist.png" alt="technologist" />
         </div>
