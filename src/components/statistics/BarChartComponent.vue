@@ -22,13 +22,12 @@ const props = defineProps<{
   range: number[];
 }>()
 
-
 // Данные для графика
 const chartData = {
   labels: ['Янв', 'Фев', 'Март', 'Апр', 'Май', 'Июнь', 'Июль', 'Авг', 'Сент', 'Окт', 'Нояб', 'Дек'].splice(props.range[0], props.range[1]),
   datasets: [
     {
-      data: props.data || [0,0,0,0,0,0],
+      data: props.data.splice(props.range[0], props.range[1]) || [0,0,0,0,0,0],
       backgroundColor: () => {
         return chartData.labels.map((_, index) =>
           index === currentMounth - props.range[0] ? '#FFE000' : '#5A5A5A'

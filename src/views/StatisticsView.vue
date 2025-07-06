@@ -28,7 +28,7 @@ onMounted(async () => {
 });
 
 const startMounth = new Date().getMonth() >= 6 ? 6 : 0;
-const endMounth = new Date().getMonth() >= 6 ? 6 : 11;
+const endMounth = new Date().getMonth() < 6 ? 6 : 11;
 
 </script>
 
